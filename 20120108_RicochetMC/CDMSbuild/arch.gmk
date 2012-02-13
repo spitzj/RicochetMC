@@ -1,0 +1,78 @@
+# $Id: arch.gmk,v 1.5 2011/05/03 21:20:11 kelsey Exp $
+# Define architecture string using GEANT4 (G4SYSTEM) syntax, and define
+# symbols for directories and whatnot used for build.
+#
+# 20100722  Michael Kelsey
+# 20100729  Change CDMS_BASE to CDMS_USER (for user's local release), use
+#	    CDMS_BASE for centralized release area with INCBASE, LIBBASE.
+# 20100830  Deal with GMake 3.79 function limitations (info, realpath)
+# 20110503  Drop use of "ARCH" here in favor of G4SYSTEM directly
+
+ifdef VERBOSE
+$(call info,loaded CDMSbuild/arch.gmk)
+endif
+
+# Special -- define "function" for debugging messages, which will be invoked
+# via "$(call info,....)" (only available in 3.79 and later).  If $(call info,...)
+# exists (in 3.81 and later), the variable-based definition will be ignored.
+
+ifneq (3.8,$(firstword $(sort 3.8 $(MAKE_VERSION))))
+info := $(shell $(1))
+endif
+
+ifndef G4SYSTEM
+  export G4SYSTEM := $(shell uname)-$(GXX)
+  ifdef VERBOSE
+  $(call info,G4SYSTEM set locally to $(G4SYSTEM))
+  endif
+endif
+
+# Define build variables based on architecture
+
+export LIBSUFFIX := .a
+export BINSUFFIX :=
+
+ifneq (,$(findstring WIN,$(G4SYSTEM)))
+  BINSUFFIX := .exe
+endif
+
+# Directory paths for building, expanded to absolute paths
+
+ifndef CDMS_USER
+export CDMS_USER := $(shell pwd)
+endif
+
+ifndef G4WORKDIR
+export G4WORKDIR := $(CDMS_USER)
+endif
+
+ifdef VERBOSE
+$(call info,G4WORKDIR=$(G4WORKDIR))
+endif
+
+export INCDIR := $(CDMS_USER)/include
+export LIBDIR := $(G4WORKDIR)/lib/$(G4SYSTEM)
+export BINDIR := $(G4WORKDIR)/bin/$(G4SYSTEM)
+export TMPDIR := $(G4WORKDIR)/tmp/$(G4SYSTEM)
+
+ifdef VERBOSE
+$(call info,INCDIR=$(INCDIR))
+$(call info,LIBDIR=$(LIBDIR))
+$(call info,BINDIR=$(BINDIR))
+$(call info,TMPDIR=$(TMPDIR))
+endif
+
+# Define include and lib directories for centralized release
+
+HAS_CDMS_BASE := $(wildcard $(CDMS_USER)/BASE)
+ifneq (,$(HAS_CDMS_BASE))
+export CDMS_BASE := $(shell cd $(HAS_CDMS_BASE);pwd)
+export INCBASE := $(CDMS_BASE)/include
+export LIBBASE := $(CDMS_BASE)/lib/$(G4SYSTEM)
+
+ifdef VERBOSE
+$(call info,CMDS_BASE=$(CDMS_BASE))
+$(call info,INCBASE=$(INCBASE))
+$(call info,LIBBASE=$(LIBBASE))
+endif	# VERBOSE
+endif	# BASE

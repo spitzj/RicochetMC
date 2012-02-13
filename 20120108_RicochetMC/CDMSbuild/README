@@ -1,0 +1,56 @@
+CDMSbuild:  Release building utilities for CDMS Simulation
+
+INDIVIDUAL USER INFORMATION
+---------------------------
+Users should check this package out as usual (cvs co cdmsim/CDMSbuild).
+
+From their cdmsim directory, they should run the script |CDMSbuild/setup|.
+This will create the necessary lib, include, tmp, and bin directories, and
+put a top-level GNUmakefile in place in order to build packages.
+
+Users will need to set up their GEANT4 environment for their local
+installation, using the CDMSbuild/g4setup.sh or g4setup.csh scripts.  These
+should be invoked depending on the user's shell environment as
+
+	. CDMSbuild/g4setup.sh		# <== For SH or KSH shells
+	source CDMSbuild/g4setup.csh	# <== For CSH or TCSH shells
+
+If users want to set up their GEANT4 environment separately, they can, but
+they must set G4WORKDIR to point to their checked-out cdmsim directory.  The
+CDMS libraries will not build correctly without a GEANT4 setup.
+
+
+SITE COORDINATOR INFORMATION
+----------------------------
+Each site (or platform) in CDMS must install GEANT4 and ROOT individually.
+This may be on a single host, or on a shared (NFS or AFS) disk resource.  At
+large institutions, such as SLAC, these may be installed centrally.
+
+In any event, each site must create a config.<CDMS_SITE> file in this
+package, formatted as for a Makefile or shell (sh) script, with the
+following lines:
+
+	G4INSTALL=<path-to-preferred-GEANT4-base>
+	ROOTSYS=<path-to-preferred-ROOT-base>
+
+In addition, a third optional line may be included:
+
+	G4ENV=<name-of-env-script>
+
+The last line is optional!  If you have renamed the GEANT4 configuration
+files ($G4INSTALL/env.sh and env.csh) to something else, you must specify
+the name in that line; for example, "G4ENV=env-rhel5-64".
+
+The <CDMS_SITE> name, used in the config file above, may be arbitrary.  If
+you can get all of your users to set the environment variable CDMS_SITE in
+their .login or .profile files, then you can use that value for the config
+file.
+
+If CDMS_SITE is not defined, the g4setup.* scripts will first look for a
+file with the name of the local DNS domain (via |domainname|).  If that is
+not found, the local hostname (via |hostname -s|) will be used.
+
+If no configuration file can be found, the g4setup.* scripts will assume
+that the user has set up their GEANT4 and ROOT environments separately.  It
+will print a warning message if G4INSTALL and ROOTSYS aren't set, and any
+subsequent attempts to build the CDMS code will probably fail.

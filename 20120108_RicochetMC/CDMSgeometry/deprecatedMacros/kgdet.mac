@@ -1,0 +1,27 @@
+# $Id: kgdet.mac,v 1.2 2011/07/22 19:35:06 kelsey Exp $
+#
+/control/verbose 2
+#
+/run/verbose 2
+
+/CDMS/verbose 1
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+/CDMS/Detector KGDet
+
+### NOTE:  Don't have any sources which can integrate with big detectors
+
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+/vis/drawVolume
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/set/autoRefresh true
+
+# 
+# 1000 events
+#
+/run/beamOn 1000

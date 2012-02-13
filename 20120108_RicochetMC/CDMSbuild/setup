@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# setup [<base>]:  Set up CDMS release area in current directory (should be
+#		   checked-out cdmsim/), with optional pointer to base area.
+#
+# $Id: setup,v 1.5 2011/11/13 14:33:28 kelsey Exp $
+# 20100722  Michael Kelsey
+# 20100729  Replace BASE symlink with new pointer if already exists
+# 20100826  Add |gmake include| at end to set up include/ symlinks
+# 20101202  Add check to ensure script is not being sourced
+# 20111112  Do not create bin, lib, tmp (done in $G4WORKDIR during builds)
+
+# Make sure user hasn't tried to |source| this from TCSH
+# NOTE:  Written so that commands execute identically in all shells
+
+test `basename -- $0` != "setup" && echo "Do not source $0"
+test `basename -- $0` != "setup" && exit 1
+
+# Get command line arguments
+
+base=$1
+
+# Copy release-level GNUmakefile from package
+
+pkg=`dirname $0`
+makefile=$pkg/GNUmakefile.rel
+[ -r $makefile ] || makefile=CDMSbuild/GNUmakefile.rel
+
+if [ ! -r $makefile ]; then
+   echo 1>&2 "Cannot find release-level GNUmakefile.  Exiting."
+   exit 2
+fi
+
+/bin/cp -f $makefile GNUmakefile
+
+# Create release-level include directory
+
+/bin/mkdir -p include
+
+# If CDMS base release specified, (re)create pointer to it
+# NOTE:  Eventually, user "$base" argument will be symbolic name, not path
+
+if [ -n "$base" ]; then
+   [ -h BASE] && /bin/rm -f BASE
+   /bin/ln -s $base BASE
+fi
+
+# Create package symlinks under include/ using Make system
+
+make=`which gmake 2> /dev/null`
+[ -z "$make" ] && make=make		### Not guaranteed to work!
+
+$make include

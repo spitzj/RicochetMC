@@ -1,0 +1,107 @@
+#ifndef CDMS_TUIcmdWithList_icc
+#define CDMS_TUIcmdWithList_icc 1
+// $Id: CDMS_TUIcmdWithList.icc,v 1.5 2011/05/26 04:48:35 kelsey Exp $
+////////////////////////////////////////////////////////////////////////
+//                                                                    //
+//  File:        CDMS_TUIcmdWithList.icc                              //     
+//  Description: Templated base class to support macro command with   //
+//		 variable-length list of arguments (all of type T)    //
+//                                                                    //
+//  NOTE:        Only double, int, bool or G4String will work with    //
+//               GEANT4 code.                                         //
+//                                                                    //
+//  Author:      Michael Kelsey (SLAC)                                //
+//  Date:        14 December 2010                                     //
+//                                                                    //
+//  20110524  M. Kelsey -- Bug fix: ConvertToString not templated!    //
+//  20110525  M. Kelsey -- Bug fix: Don't test for EOF before push    //
+//		Hack to avoid compiler warning about "unsigned <0"    //
+//////////////////////////////////////////////////////////////////////// 
+
+#include "CDMSg4base/CDMS_TUIcmdWithList.hh"
+#include "G4UIparameter.hh"
+#include <vector>
+#include <sstream>
+
+
+// Constructor and destructor
+
+template <typename T, size_t N>
+CDMS_TUIcmdWithList<T,N>::CDMS_TUIcmdWithList(const char* theCommandPath,
+					      G4UImessenger* theMessenger)
+  : G4UIcommand(theCommandPath, theMessenger) {
+  if (N>0) {
+    defaultList.reserve(N);
+    currentList.reserve(N);
+  }
+
+  G4UIparameter* listParam = new G4UIparameter('s');	// All tokens in one!
+  SetParameter(listParam);
+}
+
+template <typename T, size_t N>
+CDMS_TUIcmdWithList<T,N>::~CDMS_TUIcmdWithList() {}
+
+
+// Convert string which represents list of values to std::vector
+
+template <typename T, size_t N>
+const std::vector<T>& 
+CDMS_TUIcmdWithList<T,N>::GetNewListValue(const char* st) {
+  currentList.clear();
+  std::istringstream inputString(st);
+  T value;
+  while (inputString.good() && !inputString.eof()) {
+    inputString >> std::ws >> value >> std::ws;	// Eat enclosing whitespace
+    currentList.push_back(value);
+    if (N>0 && currentList.size()==N) break;
+  }
+
+  if (N>0 && !inputString.eof())
+    G4cerr << "ERROR: Too many input values.  Only " << N << " used." << G4endl;
+
+  if (N>0 && currentList.size()+1<N+1)	// Avoid "unsigned <0" compiler warning
+    G4cerr << "ERROR: Insufficient input values; expected " << N << G4endl;
+
+  return currentList;
+}
+
+
+// Write input list of values to space-delimited string
+
+template <typename T, size_t N>
+G4String 
+CDMS_TUIcmdWithList<T,N>::ConvertToString(const std::vector<T>& list) {
+  std::ostringstream outputString;
+  for (size_t i=0; i<list.size() || (N>0 && i+1<N+1); i++)
+    outputString << (i>0?" ":"") << list[i];
+
+  return outputString.str();
+}
+
+// Set the parameter name for the whole list, treated as a string
+
+template <typename T, size_t N>
+void CDMS_TUIcmdWithList<T,N>::SetParameterName(const char* theName, 
+					      G4bool omittable,
+					      G4bool currentAsDefault) {
+  G4UIparameter* theParam = GetParameter(0);
+  theParam->SetParameterName(theName);
+  theParam->SetOmittable(omittable);
+  theParam->SetCurrentAsDefault(currentAsDefault);
+}
+
+
+
+// Set the default values of the parameter (both vector and string form)
+
+template <typename T, size_t N>
+void CDMS_TUIcmdWithList<T,N>::SetDefaultValue(const std::vector<T>& defVal) {
+  defaultList = defVal;
+  if (N>0) defaultList.resize(N);	// Truncate if fixed-length
+
+  G4UIparameter* theParam = GetParameter(0);
+  theParam->SetDefaultValue(ConvertToString(defVal).c_str());
+}
+
+#endif	/* CDMS_TUIcmdWithList_icc */

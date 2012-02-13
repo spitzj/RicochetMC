@@ -1,0 +1,17 @@
+#!/usr/bin/awk -f
+#
+# Evaluate local host information in /etc/taylor.info to generate one of
+# the four "rhelX-YY" name strings, for use with SLAC's GEANT4 installation.
+#
+# Usage: `CDMSbuild/slac-linux /etc/taylor.info`
+#
+# $Id: slac-linux,v 1.2 2011/05/03 21:25:50 kelsey Exp $
+# 20110106  Michael Kelsey
+# 20110503  Add missing ".*" in 64-bit matching line
+
+BEGIN { base="UNKNOWN"; ver=""; bit="32"; }
+/VENDOR=(rhel|sl)/    { base="rhel";}
+/VERSION/             { split($0,tok,"="); ver=tok[2]; }
+/RUNNING_ARCH=.*86$/  { bit="32"; }
+/RUNNING_ARCH=.*_64$/ { bit="64"; }
+END { print base ver "-" bit; }

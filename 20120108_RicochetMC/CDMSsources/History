@@ -1,0 +1,293 @@
+$Id: History,v 1.43 2011/07/22 21:08:36 kelsey Exp $
+-----------------------------------------------------------------
+
+                          ==================
+                          CDMS Collaboration
+                          ==================
+ 
+  History file for CDMS GEANT4 Sources cdms/cdmsim/CDMSsources
+  ------------------------------------------------------------
+
+ This file should be used to summarize modifications and additions 
+ made to the code and to keep track of all tags.
+
+  ---------------------------------------------------------------
+  * Please list in reverse chronological order (last date on top)
+  ---------------------------------------------------------------
+
+22 July 2011 Michael Kelsey (SLAC) (cdms-sources-V00-04-00)
+-----------------------------------------------------------
+Remove all local materials tables from construction classes; use new
+singleton CDMSMaterialTable instead, which will be instantiated at the
+beginning of the job.  This ensures that all materials are defined before
+the NeutronHP process uses the materials DB to initialize cross-sections.
+
+	Am241Source	CosmogenicSource
+
+- CosmogenicSource:  Simplify generating functions to make better use of
+  CDMSVParticleGenerator interface, drop redundant data members.
+
+- CosmicMuon:  Hide RandomXxx() functions; public interface is shoot().
+
+21 July 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-16)
+-----------------------------------------------------------
+- CosmicMuon: Make all accessor functions const, re-expose the "RandomXxx()"
+  functions until CosmogenicSource is migrated to use shoot().
+
+19 July 2011 Kevin McCarthy (MIT)
+---------------------------------
+- CDMSMultiGeneratorMessenger.cc - Removed "AddSpectrumCmd->SetCandidates" line, as it prevented the use of AddSpectrum's optional weight argument.
+
+8 July 2011 Michael Kelsey (SLAC)
+---------------------------------
+- CDMSContaminantSource:  Flesh out some functionality, but not yet
+  operational.  Don't know how to get global coordinates of named volumes.
+
+7 July 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-15)
+----------------------------------------------------------
+- CDMSMultiGenerator:  Use new Messenger for adding sources.  Include weights
+  when printing sources.
+
+- CDMSMultiGeneratorMessenger:  New class to handle adding sources directly
+  to particle generator.  Functionally moved from CDMSGammaSphereMessenger.
+
+- CDMSGammaSphere:  Drop AddXXX() functions, no longer needed by Messenger.
+  Get rid of obsolete std::vector<> data members (in MultiGenerator).
+
+- CDMSGammaSphereMessenger:  Move source-adding UIcommands and functions to
+  new CDMSMultiGeneratorMessenger.
+
+- CDMSContaminantSource:  Use MultiGenerator instead of local list.
+
+6 July 2011 Kevin McCarthy (MIT) (cdms-sources-V00-03-14)
+---------------------------------------------------------
+- Added hard-coded gamma line files for Ac228, Pb212 and 214, Bi 212 and
+  214, Tl208, and Pa234, which are the main gamma sources of interest in the
+  U238 and Th232 chains.
+
+- Added "UniformLines", a gamma emitter that uniformly emits gammas from
+  1-2500 keV.  Also added support for this and the new gamma line files (see
+  above) into CDMSGammaSphereMessenger.
+
+6 July 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-13)
+----------------------------------------------------------
+- CDMSMultiGenerator:  Add source weighting to allow compositional mixes,
+  change "gammaLines" to "spectra" in data member and functions.
+
+- CDMSGammaSphere:  Follow "gammaLines" name change above.
+
+- CDMSGammaSphereMessenger.cc:  Add optional weight to AddLines and AddIsotope
+  commands, by doing string parsing manually in the corresponding functions,
+  not in the UIcommands.  Add command to set cone angle for collimation.
+  Follow "gammaLines" name change above.
+
+5 July 2011 Michael Kelsey (SLAC)
+---------------------------------
+- CDMSVParticleGenerator:  Make shootXXX() functions public.  Add
+  shootParticle() function, called to set particle type, to support
+  multi-source generators.
+
+- CDMSGammaLines.hh:  Follow changes to CDMSVParticleGenerator.
+
+- CDMSMultiGenerator:  Class to select from a list of both line-spectra and
+  radionuclides (for G4RadioactiveDecay) to produce mixtures of sources.
+
+- CDMSGammaSphere:  Use new CDMSMultiGenerator for particle production, add
+  collimation of radioactive decay products if possible, via #if flag.
+
+- CDMSContaminantSource:  INCOMPLETE new class which will provide
+  backgrounds from detector materials.
+
+- GNUmakefile:  Check for envvar CDMS_RDM_COLLIMATION and set preprocessor
+  flag if present.  This supports CDMSGammaSphere above.
+
+30 June 2011 Dennis Wright (SLAC)
+---------------------------------
+- CosmicMuon.hh, .cc : re-wrote energy sampling and theta sampling code
+  in oder to fix several problems with generator.   Changed energy sampling
+  function and parameters to those of Mei & Hime.  Removed upper energy
+  sampling limit.
+
+- CosmogenicSource.hh, .cc : use theta-independent energy sampling from
+  CosmicMuon.  Remove energy range and binning parameters.
+
+- CosmogenicSourceMessenger.hh, .cc : remove user commands to alter energy 
+  range sampling.
+ 
+16 June 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-12)
+-----------------------------------------------------------
+- CDMSVParticleGenerator:  New base class for line spectra and cosmic ray
+  muons.  Provides simple interface to throw energy, direction, and maybe
+  multiple particle types, which a CDMSVSourceConstruction subclass can use
+  to configure G4ParticleGun.
+
+- CDMSGammaLines:  Adjust interface to use new CDMSVParticleGenerator base.
+
+9 June 2011 Dennis Wright (SLAC)  (cdms-sources-V00-03-11)
+----------------------------------------------------------
+- create classes:
+    CosmogenicSource: cosmic ray muon generator 
+    CosmicMuon: implementation of the Cassiday/Groom parameterization
+    CosmogenicSourceMessenger: messenger to CosmogenicSource
+
+25 May 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-10)
+----------------------------------------------------------
+- CDMSPhysicsList:  Need to call ConstructParticle() for all physics lists;
+  otherwise, things like RadioactiveDecay aren't invoked.
+
+- CDMSGammaSphereMessenger.cc:  Add diagnostic messages for adding decays.
+
+25 May 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-09)
+----------------------------------------------------------
+- CDMSGammaSphereMessenger.cc: Fix path string and null-pointer dereference
+  in constructor
+
+24 May 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-08)
+----------------------------------------------------------
+- CDMSGammaSphereMessenger:  Implement macro commands in construtor.  Now
+  fully operational, including instantiation of Co-60 and K-40 spectra.
+
+24 May 2011 Kevin McCarthy (MIT)
+--------------------------------
+- Co60GammaLines: New class to generate radiogenic gammas from a Co60 spectrum.
+- K40GammaLines: New class to generate radiogenic gammas from a K40 spectrum.
+
+24 May 2011 Michael Kelsey (SLAC)
+---------------------------------
+- CDMSGammaLines:  Add inlined operator<<() for printing, add some diagnostics.
+
+- CDMSGammaSphere:  Add PrintParameters() (from CDMSVDetectorGeometry) for
+  printing.  Will report all registered spectra and radionuclides.  Activate
+  use of Messenger class (below).
+
+- CDMSGammaSphereMessenger:  New class for macro commands to configure
+  CDMSGammaSphere.  Currently INCOMPLETE (no commands are instantiated).
+
+23 May 2011 Michael Kelsey (SLAC)
+---------------------------------
+- CDMSGammaSphere:  New class to generate radiogenic gammas from fictitious
+  spherical surface, directed either inward or outward.
+
+20 May 2011 Michael Kelsey (SLAC) (cdms-sources-V00-03-07)
+----------------------------------------------------------
+- CDMSGammaLines:  New class to implement functionality of generating gammas
+  for various sources.  Adapted from Am241Lines with more STL use.
+
+- Am241Lines:  Inherit from new CDMSGammaLines class.  Remove all
+  functionality except filling lists of energies and intensities in ctor.
+
+04 May 2011 Kristi Schneck (SLAC/Stanford) (cdms-sources-V00-03-06)
+-------------------------------------------------------------------
+- Am241Lines: Updated hardwired gamma lines to more accurately reflect
+  experimental spectrum.	
+
+29 April 2011  Michael Kelsey (SLAC) (cdms-sources-V00-03-05)
+-------------------------------------------------------------
+- Am241Lines:  Add verbosity.  Fix bug when generating gamma direction.
+
+27 April 2011  Michael Kelsey (SLAC) (cdms-sources-V00-03-04)
+-------------------------------------------------------------
+- CDMSPhysicsList:  Add verbosity as ctor arg, pass to constituent lists;
+  comment-out CDMSPhysicsList until memory corruption is resolved.
+
+- Am241Lines:  New class to encapsulate hardwired gammma lines.
+
+- Am241Source:  Use new class instead of hardwired gammas here.
+
+14 February 2011  Michael Kelsey (SLAC) (cdms-sources-V00-03-03)
+----------------------------------------------------------------
+- CDMSPhysicsList:  Add optical photons to the set.
+
+14 February 2011  Michael Kelsey (SLAC) (cdms-sources-V00-03-02)
+----------------------------------------------------------------
+- CDMSPhysicsList:  New class to define physics processes relevant for CDMS
+  backgrounds: standard EM, "Shielding" for hadrons, and RadioactiveDecay.
+
+5 January 2011  Michael Kelsey (SLAC) (cdms-sources-V00-03-01)
+--------------------------------------------------------------
+- RadiogenicSources:  Replace GeneratePrimaryVertex() with GeneratePrimaries().
+
+23 December 2010  Michael Kelsey (SLAC) (cdms-sources-V00-03-00)
+----------------------------------------------------------------
+- CDMSVSourceConstruction:  Move class to new CDMSg4base package.
+
+- CDMSDemoSource.hh, Am241Source.hh, RadiogenicSources.hh:  Change #include
+  to point to new CDMSg4base package.
+
+13 December 2010  Michael Kelsey (SLAC) (cdms-sources-V00-02-01)
+----------------------------------------------------------------
+Move radioactive "contamination" sources from CDMSmain here, in toto.  This
+will be split out into separate utility classes to generate the radioactive
+decays, separate from being particle-gun actions or localized "material"
+sources.
+
+- RadiogenicSources:  NEW class adapted from CDMSmain/CDMS_ParticleSource.
+
+- RadiogenicSourcesMessenger:  NEW class adpated from
+  CDMSmain/CDMS_ParticleSourceMessenger.
+
+10 December 2010  Michael Kelsey (SLAC) (cdms-sources-V00-02-00)
+----------------------------------------------------------------
+Follow changes to CDMSVDetectorGeometry, replacing GetMaximumSize() with
+GetRadius() and GetLength(), and putting position vector into base class.
+
+- CDMSVSourceConstruction.hh:  Put direction vector here, with Get() and
+  Set().  Provide dummy implementations of geometry base functions.
+
+- CDSMDemoSource:  Defer to base classes for vectors.
+
+- Am241Source:  Defer to base classes for vectors, implement GetRadius()
+  and GetLength().  Eliminate SetSrcXXX() functions (all in base classes).
+
+- Am241Messenger.cc:  Migration SetXXX() calls to new Am241Source versions.
+
+9 December 2010 Michael Kelsey (SLAC)
+-------------------------------------
+- Am241Source:  Collapse ctor to use initializers, move SetXXX() to inline,
+  improve diagnostic messages, add PrintParameters().
+
+6 December 2010 Michael Kelsey (SLAC) (cdms-sources-V00-01-03)
+--------------------------------------------------------------
+- Am241Source:  Remove G4ParticleGun from ctor, dtor.
+
+29 November 2010 Michael Kelsey (SLAC) (cdms-sources-V00-01-02)
+---------------------------------------------------------------
+- CDMSVSourceConstruction.cc:  Implement constructor and destructor here,
+  with instantiation of (dummy) G4ParticleGun.
+- CDMSDemoSource:  Add call to base class ctor, remove local particleGun.
+
+22 November 2010 Michael Kelsey (SLAC) (cdms-sources-V00-01-01)
+---------------------------------------------------------------
+- CDMSVSourceConstruction.hh:  Add comments for function declarations
+- Am241Source.cc:  Add missing #include
+
+27 October 2010  Michael Kelsey (SLAC) (cdms-sources-V00-01-00)
+---------------------------------------------------------------
+Reorganize abstract base classes and Messengers to support constructing
+multiple geometries (choosing labs, detectors, and sources) from macros.
+
+- Am241Source: Add member functions to support CDMSVDetectorGeometry.
+- CDMSDemosource:  Add member functions to support CDMSVDetectorGeometry.
+- CDMSVSourceConstruction:  Move here from CDMSgeometry/geombase.
+
+25 October 2010  Michael Kelsey (SLAC)
+--------------------------------------
+- Am241Source.cc:  add "/CDMS/" to all command paths.
+
+9 September 2010 Dennis Wright (SLAC) (cdms-sources-V00-00-01)
+--------------------------------------------------------------
+- create simple Am241 radioactive source and messenger classes:
+  Am241Source.hh, .cc, Am241Messenger.hh, .cc
+
+27 July 2010 Michael Kelsey (SLAC) (cdms-sources-V00-00-00)
+-----------------------------------------------------------
+- Move contents of CDMSgeometry/sources here, to separate functionality.
+
+  Code for radioactive sources, caveran radioactivity, and cosmic rays will
+  live here, and can be linked into simulation executables separately from
+  the geometry models.
+
+	CDMSDemoSource.hh
+	CDMSDemoSource.cc
+	GNUmakefile
+	History (this file)

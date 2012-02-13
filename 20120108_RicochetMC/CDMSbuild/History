@@ -1,0 +1,258 @@
+$Id: History,v 1.42 2011/11/13 14:33:28 kelsey Exp $
+----------------------------------------------------------------
+
+                          ==================
+                          CDMS Collaboration
+                          ==================
+ 
+  History file for CDMS Release Builder cdms/cdmsim/CDMSbuild
+  -----------------------------------------------------------
+
+ This file should be used to summarize modifications and additions 
+ made to the code and to keep track of all tags.
+
+  ---------------------------------------------------------------
+  * Please list in reverse chronological order (last date on top)
+  ---------------------------------------------------------------
+
+13 November 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-29)
+--------------------------------------------------------------
+- g4setup.csh, g4setup.sh:  Add "delpath" alias to strip prior instance of
+  ROOTSYS from user path's before adding it.  Allows changing ROOT version
+  without having old version interfering.
+
+- setup:  Do not create lib, bin, tmp directories here.  Defer creation to
+  first build so they are placed in $G4WORKDIR.
+
+- config.michael-kelseys-macbook:  Update to ROOT 5.30.
+
+4 November 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-28)
+-------------------------------------------------------------
+- config.michael-kelseys-macbook:  Update to ROOT 5.27.
+
+- build.gmk, packages.gmk, targets.gmk: Add definition of EXITK macro, which
+  is "exit" normally, or "true" if user specified "-k" option.  At each
+  $(MAKE), add "|| $(EXITK)" so that errors stop the build immediately,
+  rather than skipping through to subsequent stages.
+
+28 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-27)
+-------------------------------------------------------------
+- config.slac.stanford.edu:  Update to 9.4-patch-02.
+
+25 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-26)
+-------------------------------------------------------------
+- config.michael-kelseys-macbook:  Add RADSRC environment variables.
+
+23 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-25)
+-------------------------------------------------------------
+- config.cdmsmicro:  Configuration for Fermilab CDMSMICRO machine.
+
+21 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-24)
+-------------------------------------------------------------
+- geant4.gmk:  Work around bugs in GEANT4 scripts:  Check if G4INCLUDE is
+  populated, rather than defined (architecture.gmk creates empty one), and
+  add three missing CHIPS subdirectories, in addition to physics_lists.
+
+17 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-23)
+-------------------------------------------------------------
+- geant4.gmk:  Check for known missing "granular" include directories and
+  add them (currently the two physics_lists subdirectories).
+
+- config.loer-fcpa:  New config file for Ben Loer, Fermilab.
+
+7 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-22)
+------------------------------------------------------------
+- build.gmk:  Use radsrc.gmk (below) to support external RADSRC package.
+
+- radsrc.gmk:  Configure builds to link against external RADSRC package, if
+  user has it installed in their environment (RADSRC_HOME).
+
+3 October 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-21)
+------------------------------------------------------------
+- config.michael-kelseys-macbook:  Update to 9.4-patch-02 build (should have
+  been done weeks ago).
+
+9 June 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-20)
+---------------------------------------------------------
+- geant4.sh:  Protect use of |unalias| command by checking that user actual
+  has defined the "cd" alias.  Remove some extra debugging output which
+  should not have been committed.
+
+23 May 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-19)
+---------------------------------------------------------
+- config.slac.stanford.edu:  Use GEANT4 release 9.4-patch-01.  "Hacked" 9.3
+  reference left in comments, so users can try backing up if they need to.
+
+4 May 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-18)
+--------------------------------------------------------
+- config.slac.stanford.edu:  Use SLAC-local "hacked" version of 9.3-patch02,
+  which includes Shielding and muon-nuclear backported from 9.4.
+
+3 May 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-17)
+--------------------------------------------------------
+- arch.gmk:  Drop use of local ARCH variable in favor of G4SYSTEM.  For some
+  reason, at SLAC the use of parenthesis shells set ARCH=64.
+
+- build.gmk:  Drop parenthetical child process for subdirectories; -C flag
+  works fine (same as is done for <pkg>.<target>).
+
+- g4setup.csh, .sh:  Use |unalias cd| to protect against user redefinitions
+
+- slac-linux:  Fix bug in matching 64-bit architecture (missing ".*")
+
+21 April 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-16)
+-----------------------------------------------------------
+- build.gmk, targets.gmk:  Remove "depend" as a dependency of "all", to
+  avoid error messages when older packages are checked out.
+
+21 January 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-15)
+-------------------------------------------------------------
+- geant4.gmk:  Add $(GDMLLIBS) to support GDML and XercesC in executables.
+- g4setup.csh, g4setup.sh:  Add "escape" to |cd| to avoid users' aliases.
+
+11 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- confg.michael-kelseys-macbook:  Update GEANT4 version to 4.9.4.
+
+6 January 2011  Michael Kelsey (SLAC) (cdms-build-V00-00-14)
+------------------------------------------------------------
+- slac-linux:  New script to extract "rhelX-YY" from Taylor info; only
+  usable on Taylor-ed SLAC hosts.
+
+- config.slac.stanford.edu:  Use `slac-linux` to set G4ENV, define G4WORKDIR
+  using |a2nfs| post-processing.
+
+- g4setup.csh, g4setup.sh:  Don't overwrite G4WORKDIR if already set.
+ 
+2 December 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-13)
+-------------------------------------------------------------
+- build.gmk:  Build $(TMPDIR) using macro test, rather than by target.
+  Ensures that directory exists before dependency files are build.
+
+- setup:  Add protection against user running |source| from wrong shell.
+
+30 November 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-12)
+-------------------------------------------------------------
+- build.gmk:  Remove dependence of .d files on $(TMPDIR).  On Linux, this
+  causes them to be regenerated for every target.
+
+02 September 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-11)
+--------------------------------------------------------------
+- build.gmk:  Fix use of LIBSUFFIX and BINSUFFIX to remove extra ".".
+- geant4.gmk:  Add definition of LDFLAGS, remove "-L" from LDLIBS.
+
+31 August 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-10)
+-----------------------------------------------------------
+- CDMSsite.sh, CDMSsite.csh:  Add checks to parse config.* lines only on
+  first "=", to allow for those characters in the value string.
+
+- arch.gmk:  Export the xxxSUFFIX (not using consistently yet)
+
+- build.gmk:  Use LIBSUFFIX instead of ".a", fix order of arguments for
+  linking.
+
+- config.slac.stanford.edu:  Add code to set G4ENV based on host pool.
+
+30 August 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-09)
+-----------------------------------------------------------
+- CDMSsite.sh:  Need to embed backquote expressions in quotes for test
+
+- arch.gmk:  Replace $(realpath ...) with $(shell cd ...; pwd) to support
+  GMake 3.79.1.
+
+- build.gmk:  Move "if clean" check outside of DEPNAMES check, so that
+  .d files can be deleted during clean.
+
+- g4setup.csh,.sh:  Check for user preset variables before overriding
+
+- GNUmakefile.rel, arch.gmk, build.gmk,
+  commands.gmk, geant4.gmk, help.gmk,
+  packages.gmk, targets.gmk:  To support GMake 3.79.1, replace $(info ...)
+  $(info ...) with $(call info,...), where "info" is defined as a variable
+  which expands $(shell echo ...).  For 3.80 and later, this will be ignored
+  and the internal function called directly.
+
+27 August 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-08)
+-----------------------------------------------------------
+- setup:  Invoke |gmake include| at end to populate include/ symlinks.
+
+- build.gmk:  Add package-level "all" target, and remove "include".
+
+- geant4.gmk:  Use $(G4INSTALL)/Configure to get all compiler flags, and to
+  get full list of libraries when "granular" libraries were built.
+
+- targets.gmk:  Add dependence on "include" to all top-level build targets.
+
+- packages.gmk:  Add dependence on top-level "include" to package targets.
+
+26 August 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-07)
+-----------------------------------------------------------
+- geant4.gmk:  Check for both static and shared global library.
+
+26 August 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-06)
+-----------------------------------------------------------
+- g4setup.csh,.sh:  Replace use of |basename| with regexp; doesn't work on
+  RHEL5, as login shell is name "-tcsh", which |basename| sees as "-t" option.
+
+- geant4.gmk:  Change messages about G4 build from $(info) to $(warning).
+  Skip all activity if user's target is "clean".
+
+25 August 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-05)
+-----------------------------------------------------------
+- CDMSsite.sh:  Used |dnsdomainname| for site name, define as alias if not
+  available on system.  |domainname| command returns YP/NIS name, which is
+  not correct for SLAC.
+
+29 July 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-04)
+---------------------------------------------------------
+- arch.gmk:  Support BASE symlink, defining CDMS_BASE, INCBASE, LIBBASE.
+  User's release area now called CDMS_USER.
+
+- build.gmk:  If INCBASE and LIBBASE defined, use them in compiler options.
+
+29 July 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-03)
+---------------------------------------------------------
+- README:  Update with documentation for site administrators.
+
+- CDMSsite.sh:  Determine CDMS "site name" and corresponding config.* file;
+  see the README file for details.
+
+- CDMSsite.csh:  Wrapper for CDMSsite to translate from SH syntax
+  (VAR=value) to CSH (setenv VAR value).
+
+- g4setup.csh:  Rewrite to use CDMSsite.csh.
+
+- g4setup.sh:  (new) SH version of environment script for sh/bash/ksh users.
+
+- setup:  If BASE symlink already exists, replace with new argument
+
+27 July 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-02)
+---------------------------------------------------------
+- geant4.gmk:  Enable proper use of visualization and UI libraries.
+- build.gmk:  Use "::" for top-level targets with subdirectory support.
+
+27 July 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-01)
+---------------------------------------------------------
+- build.gmk, targets.gmk:  Eliminate "include" and "src" subdirectories, go
+  to flat package structure.
+
+- g4setup.csh:  Add sanity check to require |source|, not execution.
+
+22 July 2010 Michael Kelsey (SLAC) (cdms-build-V00-00-00)
+---------------------------------------------------------
+Initial installation of package, including setup script and topical
+Makefiles (*.gmk):
+
+A CDMSbuild/GNUmakefile.rel
+A CDMSbuild/History
+A CDMSbuild/README
+A CDMSbuild/arch.gmk
+A CDMSbuild/build.gmk
+A CDMSbuild/commands.gmk
+A CDMSbuild/g4setup.csh
+A CDMSbuild/geant4.gmk
+A CDMSbuild/help.gmk
+A CDMSbuild/packages.gmk
+A CDMSbuild/setup
+A CDMSbuild/targets.gmk
+

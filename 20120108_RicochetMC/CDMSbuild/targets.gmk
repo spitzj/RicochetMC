@@ -1,0 +1,54 @@
+# $Id: targets.gmk,v 1.7 2011/11/04 23:28:48 kelsey Exp $
+# Define and apply targets to every package (via <package>.<target> syntax)
+#
+# 20100722  Michael Kelsey
+# 20100827  Make all targets depend on "include", to ensure symlinks.
+# 20110421  Remove "depend" as target of "all", to avoid errors in old packages
+# 20111104  Add "|| exit" after $(MAKE) command to ensure error failure
+
+ifdef VERBOSE
+$(call info,loaded CDMSbuild/targets.gmk)
+$(call info,MAKEFLAGS = $(MAKEFLAGS))
+endif
+
+# Ensure that list of packages is available
+
+ifndef PACKAGES
+include packages.gmk
+endif
+
+# Define exit-on-error condition for recursive Make
+
+ifneq (,$(findstring k,$(MAKEFLAGS)))
+  EXITK := true
+else
+  EXITK := exit
+endif
+
+# Define top-level targets to propagate through to each package
+
+.PHONY : all include depend lib bin clean veryclean
+
+all    : include lib bin
+
+depend lib bin clean :
+	@for p in $(PACKAGES) ; do $(MAKE) $$p.$@ || $(EXITK) ; done
+
+veryclean : clean
+	@$(ECHO) "'veryclean' deletes everything!  Run CDMSbuild/setup again!"
+	@$(RM) -rf lib bin tmp include GNUmakefile
+
+# NOTE:  Since "include" is a keyword, need colon without space for target
+include: $(addprefix include/,$(PACKAGES))
+
+include/% :
+	$(LN) -s ../$(notdir $@) $@
+
+# Create top-level directories as needed
+
+depend:  include $(TMPDIR)
+lib:     include $(LIBDIR)
+bin:     include $(BINDIR)
+
+$(TMPDIR) $(INCDIR) $(LIBDIR) $(BINDIR) :
+	$(MKDIR) -p $@

@@ -1,0 +1,126 @@
+$Id: History,v 1.19 2011/07/21 21:19:00 kelsey Exp $
+-----------------------------------------------------------------
+
+                          ==================
+                          CDMS Collaboration
+                          ==================
+ 
+  History file for CDMS GEANT4 RunManager tools cdms/cdmsim/CDMSactions
+  ---------------------------------------------------------------------
+
+ This file should be used to summarize modifications and additions 
+ made to the code and to keep track of all tags.
+
+  ---------------------------------------------------------------
+  * Please list in reverse chronological order (last date on top)
+  ---------------------------------------------------------------
+
+21 July 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-07)
+------------------------------------------------------------
+- CDMSRunActionMessenger:  Add UIcommand to reset run number in RunManager.
+
+21 July 2011 Kevin McCarthy (MIT) (cdms-actions-V00-02-06)
+----------------------------------------------------------
+- CDMS_SelectMISS: Belated add of completed MISS selector class.  The filter
+  currently selects MISS events in 1 cm detectors (MISS defined as at least
+  one scatter in top mm and at least one scatter in the bottom mm of the
+  detector. Currently hardcoded so only works with detector bottom placed at
+  z=0).
+
+- CDMSRunActionMessenger.cc: Updated to include command allowing selection
+  of CDMS_SelectMISS filter.
+
+8 July 2011  Michael Kelsey (SLAC)
+----------------------------------
+- CDMS_SelectMISS:  Outline of class to do multiple-scatter selection, for
+  completion by Kevin McCarthy.
+
+6 July 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-05)
+-----------------------------------------------------------
+- CDMSRunAction:  CDMSEventSelector is owned, must be deleted on replacement.
+
+- CDMSRunActionMessenger:  Add UIcommand and support function to create
+  event-filter and pass to RunAction.
+
+5 July 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-04)
+-----------------------------------------------------------
+- CDMSSimData.cc, CDMSSimRoot.cc:  Fix bugs in filename construction.
+
+30 June 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-03)
+------------------------------------------------------------
+- CDMSRunAction:  Move output filename construction to CDMSSim* classes.
+  Use verbosity to control output messages, and pass verbosity to CDMSSim*.
+  
+- CDMSRunActionMessenger:  Drop unused commands.
+
+- CDMSSimData, CDMSSimRoot:  Add filename construction functions, with new
+  format (PFX_LLYYMMDD_RRRR.xxx), synchronize member function names between
+  classes.  Add diagnostic messages controlled by verbosity.
+
+28 June 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-02)
+------------------------------------------------------------
+- CDMSEventSelector.hh:  Base class for event selection "trigger filter".
+- CDMSRunAction:  Add event selection data member and use in transferEvent.
+
+25 April 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-01)
+--------------------------------------------------------------
+- CDMSSimData.cc:  Per Rudy Resch, remove extraneous tabs from column heads.
+
+20 April 2011  Michael Kelsey (SLAC) (cdms-actions-V00-02-00)
+--------------------------------------------------------------
+- CDMSSimData:  New class, analogous to CDMSSimRoot, to encapsulate writing
+  of hits to text file.
+
+- CDMSSimRoot:  Separate single-hit writing to separate functions, and
+  change units to match needs of DMC (eV and meters).
+
+- CDMSRunAction:  Replace local data file handling with CDMSSimData.
+
+26 January 2011  Dennis Wright (SLAC) (cdms-actions-V00-01-02)
+--------------------------------------------------------------
+- add overloaded method CDMSSimRoot::FillRootTrees to fill veto
+  root tree
+- write out veto panel hits to root file in CDMSRunAction
+
+5 November 2010  Dennis Wright (SLAC) (cdms-actions-V00-01-01)
+--------------------------------------------------------------
+- CDMSSimRoot: expand root output to include up to 110 zips
+  (this number hard-wired for now, but should be made adjustable)
+ 
+27 October 2010  Michael Kelsey (SLAC) (cdms-actions-V00-01-00)
+---------------------------------------------------------------
+- CDMSRunAction.hh: Add verbosity flag.
+- CDMSRunActionMessenger.hh: Add verbosity-setting command.
+
+25 October 2010 Michael Kelsey (SLAC)
+-------------------------------------
+- CDMSRunAction:  add function and data member for filename prefix.
+- CDMSRunActionMessenger: add "/CDMS/" to all command paths, activate prefix.
+- CDMSSimRoot: add verbosity flag and hide messages behind it.  Add some
+  better pointer checking and zeroing for reuse.
+
+9 September 2010 Dennis Wright (SLAC) (cdms-actions-V00-00-02)
+--------------------------------------------------------------
+- CDMSSimRoot: add veto tree, create zip trees only when needed, add
+  event number and hits per event to event tree.  Removed NO_ENTRY 
+  values at request of Bruno Serfass.
+
+1 August 2010 Michael Kelsey (SLAC) (cdms-actions-V00-00-01)
+------------------------------------------------------------
+- History:  Forgot to include tag in comment below.
+- CDMSEventAction:  Fix naming CDMSMiniRunAction -> CDMSRunAction.
+
+27 July 2010 Michael Kelsey (SLAC) (cdms-actions-V00-00-00)
+-----------------------------------------------------------
+- Move contents of CDMSgeometry/management here, to separate functionality.
+
+  Code for G4RunActions etc. live here, and can be linked into simulation
+  executables separately from the geometry models.  This isolates the
+  dependence upon ROOT for output analysis files.
+
+	GNUmakefile
+	History (this file)
+	CDMSEventAction.hh,cc		<== Renamed form CDMSMiniEventAction
+	CDMSRunAction.hh,cc		<== Renamed from CDMSMiniRunAction
+	CDMSRunActionMessenger.hh,cc	<== Renamed from CDMSMiniRunActionMes.
+	CDMSSimRoom.hh,cc

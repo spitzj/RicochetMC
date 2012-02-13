@@ -1,0 +1,1134 @@
+$Id: History,v 1.123 2011/07/27 19:23:56 kevmc Exp $
+--------------------------------------------------------
+
+                          ==================
+                          CDMS Collaboration
+                          ==================
+ 
+  History file for CDMS General Geometry cdms/cdmsim/CDMSgeometry
+  ---------------------------------------------------------------
+
+ This file should be used to summarize modifications and additions 
+ made to the code and to keep track of all tags.
+
+  ---------------------------------------------------------------
+  * Please list in reverse chronological order (last date on top)
+  ---------------------------------------------------------------
+27 July 2011 Kevin McCarthy (MIT) (cdms-ggeom-V00-06-01)
+-------------------------------------------------------
+CDMS_GGSim now accepts a second argument that sets the run ID, 
+for example, "CDMS_GGSim mymacro.mac <RunID>". 
+
+22 July 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-06-00)
+---------------------------------------------------------
+Remove all local materials tables from construction classes; use new
+singleton CDMSMaterialTable instead, which will be instantiated at the
+beginning of the job.  This ensures that all materials are defined before
+the NeutronHP process uses the materials DB to initialize cross-sections.
+
+	detectors/CDMSMiniMaterials REMOVED
+	detectors/ShieldMaterials REMOVED
+	detectors/Am241SourceHolder
+	detectors/CDMSMiniDetConstruction
+	detectors/CDMSMultiTowerConstruction
+	detectors/CDMSShieldConstruction
+	detectors/CDMSTowerConstruction
+	detectors/CDMSTowerSupportConstruction
+	detectors/CDMSVesselConstruction
+	detectors/CDMSZipConstruction
+	detectors/CKGDetConstruction
+	interface/CDMSGeomConstructor
+	labs/NoLabMaterials REMOVED
+	labs/SnoLabMaterials REMOVED
+	labs/NoLab
+	labs/SnoLab
+
+- 7TowerSnoCosmic.mac, 7tower.mac, 9tower.mac, kgdet.mac:
+  Follow change to CDMSRunActionMessenger.cc (cdms-actions-V00-02-03) which
+  eliminated the /CDMS/Draw command.  
+
+21 July 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-13)
+---------------------------------------------------------
+- zip+gammas.mac:  Add comment for Kevin's change below.
+
+19 July 2011 Kevin McCarthy (MIT)
+--------------------------------
+- zip+gammas.mac:  Changed "AddLines" to "AddSpectrum" to agree with new
+  CDMSMultiGenerator nomeclature
+
+11 July 2011 Rudy Resch (SLAC) (cdms-ggeom-V00-05-12)
+-----------------------------------------------------
+- CDMSZipSD.cc:  Change sensitive detector to use pre step instead of post
+  step.  Had some issues with energy depositions outside the crystal.
+
+6 July 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-11)
+--------------------------------------------------------
+- zip+gammas.mac:  Add composition fraction (weight) to source commands.
+  Requires CDMSsources cdms-sources-V00-03-13 or later.
+
+30 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-10)
+---------------------------------------------------------
+- detectors/CDMSZipSD.cc:  Drop post-step volume checking, redundant with
+  documented behaviour of SensitiveDetector.
+
+30 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-09)
+---------------------------------------------------------
+- labs/NoLab.cc, SnoLab.cc:  Pass name string to base class ctor, use in
+  top-level geometry.
+
+29 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-08)
+---------------------------------------------------------
+- detectors/CKGZipSD:  Fix constness of string argument to ctor.
+
+- detectors/:  Assign name argument to base class constructor of all
+  detector objects, and use GetName() for naming of top-level volumes.
+  Affects all concrete detector objects, in .cc files only:
+
+	Am241SourceHolder.cc
+	CDMSMiniDetConstruction.cc
+	CDMSMultiTowerConstruction.cc
+	CDMSShieldConstruction.cc
+	CDMSTowerConstruction.cc
+	CDMSTowerSupportConstruction.cc
+	CDMSVesselConstruction.cc
+	CDMSZipConstruction.cc
+	CKGDetConstruction.cc
+
+23 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-07)
+---------------------------------------------------------
+- detectors/Am241SourceHolder.cc:  Set plane of "active source" (where atoms
+  are planted to decay) at base of ActiveSource plug, not surface of puck.
+
+- G102a.mac:  Remove two-event cutoff, put in for debugging.  Now 10k events.
+
+23 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-06)
+---------------------------------------------------------
+- detectors/Am241SourceHolder,
+  interface/Am241SourceHolderMessenger:  Add user-configurable material for
+  alpha foil.
+
+- G102a.mac:  Restore alpha-foil, but use 2 mil Kapton tape, not aluminum.
+
+17 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-05)
+---------------------------------------------------------
+- detectors/Am241SourceHolder.cc:  Allow for zero thickness on foil and lead
+  to leave out those components.
+
+- G102a.mac:  Version of G101a.mac with aluminum foil excluded.
+
+17 June 2011 Michael Kelsey (SLAC) (cdms-ggeom-V00-05-04)
+---------------------------------------------------------
+- interface/CDMSGeometryManager.cc:  Initialize all pointers to zero in ctor.
+
+9 June 2011  Dennis Wright (SLAC) (cdms-ggeom-V00-05-03)
+--------------------------------------------------------
+- labs/: Add GetOverBurdenDensity(), GetCavernLength(), GetCavernWidth(),
+  GetCavernHeight() to NoLab and SnoLab for communicating to cosmogenic
+  source
+- interface/: Add cosmogenic source to CDMSGeomMessenger,
+  CDMSGeomConstructor: get lab quantities and pass them to cosmogenic source
+  for construction.
+
+25 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-05-02)
+---------------------------------------------------------
+- zip+gammas.mac: Add lines to use isotopes with RadioactiveDecay (requires
+  CDMSg4base cdms-g4base-V00-01-02 or later), put center of sphere on ZIP,
+  not at origin of coordinates.
+
+- CDMS_GGSim.cc:  Use CDMSPhysicsList instead of QGSP_BERT (requires
+  CDMSsources cdms-sources-V00-03-10 or later).
+
+24 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-05-01)
+---------------------------------------------------------
+- interface/CDMSGeomConstructor.cc:  Check source volume pointer rather than
+  radius for building.
+
+- interface/CDMSGeomMessenger.cc:  Add CDMSGammaSphere to sources.
+
+- zip+gammas.mac:  Demostration of new GammaSphere source.
+
+24 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-05-00)
+---------------------------------------------------------
+- interface/Am241HolderMessenger.cc,
+  interface/CDMSGeomMessenger.cc,
+  interface/CDMSMultiTowerMessenger.cc,
+  interface/CDMSShieldMessenger.cc:  Use CreateCommand<T> from
+  base class instead of direct "new G4UIcommand" instantiations.  Call
+  through to base ::SetNewValue() to ensure that commands are respected.
+
+NOTE:  Requires CDMSg4base cdms-g4base-V00-01-01 or later.
+
+20 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-14)
+---------------------------------------------------------
+- detectors/Am241SourceHolder.cc:  Pass verbosity to Am241Lines ctor.
+
+- interface/CDMSGeomConstructor:  Use SetVerboseLevel to pass verbosity to
+  all instantiated objects (detectors and sources).
+
+- G101a.mac:  Reduce verbosity, add run-time verbosity for source.
+
+4 May 2011  Dennis Wright (SLAC) (cdms-ggeom-V00-04-13)
+-------------------------------------------------------
+- labs/  implement SnoLab geometry with classes SnoLab, SnoLabMaterials
+  and SnoLabMessenger
+- interface/ CDMSGeometryManager.hh, .cc, add SnoLab to list of labs
+             CDMSGeomMessenger.cc, add SnoLab
+
+4 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-12)
+--------------------------------------------------------
+- detectors/CDMSZipSD.cc: Use G4VTouchable to get transformation for hit
+  coordinates; this provides directly world-to-local, instead of just
+  mother-to-local.  Check name of post-step logical volume and reject hits
+  which don't end inside a crystal ("LogicalZip").  Fix ctor constness.
+
+- detectors/CDMSVetoSD.cc: Use G4VTouchable to get transformation for hit
+  coordinates; this provides directly world-to-local, instead of just
+  mother-to-local.  Fix ctor constness.
+
+- detectors/CDMSZipHit, CDMSVetoHit:  Fix constness of SetTransform().
+
+2 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-11)
+--------------------------------------------------------
+- detectors/CDMSZipConstruction:  Add G4bool "solid" flag to
+  BuildHousingShape, so that mother volume is created all the way to r=0;
+  otherwise ZIP placement is invalid, being "outside" the mother volume.
+
+- detectors/CDMSTowerPattern.cc, Am241SourceHolder.cc:  Cast std::floor and
+  std::ceil to G4int to avoid compiler warnings on Linux.
+
+2 May 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-10)
+--------------------------------------------------------
+- CDMS_GGSim.cc:  Add QGSP_BERT_HP.hh for future testing.
+
+- iZip100mm_Am241.mac, G101a.mac:  Refine ZIP and source parameters
+
+- detectors/CDMS*Hit, CDMS*SD:  Change name of transform-setting function,
+  add additional Z-offset for ZIP local coordinates.
+
+- interface/CDMSGeomConstructor.cc:  Fix initialization order in ctor.
+
+29 April 2011  Michael Kelsey (SLAC)
+------------------------------------
+- interface/CDMSGeomConstructor:  Move material table (CDMSVMaterials) to
+  data member.  Materials must be pre-loaded in ctor in order for NeutronHP
+  (used by Shielding physics list) to function properly.
+
+29 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-08)
+-----------------------------------------------------------
+- Am241SourceHolder.cc:  Build canister as hollow cylinder, not solid (to
+  avoid interspersed copper from placements).  Use collimator location as
+  SourcePos, rather than center of source (for offset holes).
+
+- iZip100mm_Am241.mac:  Change back to 1k events after finding bug in gamma
+  generator.  Requires CDMSsources cdms-sources-V00-03-05.
+
+28 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-07)
+-----------------------------------------------------------
+- bare-Am241holder.mac:  Add "DrawSolid" option to do opaque rendering.
+- iZip100mm_Am241.mac:  Change to 100k events in order to get a few hits,
+  set flag to use hardwired gamma lines.
+
+- detectors/Am241SourceHolder.cc: Add recess to source puck, so that active
+  source surface is exposed.  Use exponential based on activity to generate
+  random time stamps.  Fix bug in SetSolidOrWireFrame() action.
+
+27 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-06)
+-----------------------------------------------------------
+- detectors/CDMSZipHit, CDMSVetoHit:  Add coordinate transform from global
+  to local ZIP coordinates, modify position accessors to apply transform.
+
+- detectors/CDMSZipSD.cc, CDMSVetoSD.cc:  Set coordinate transformation from
+  physical volume.
+
+- detectors/Am241SourceHolder:  Use new Am241Lines class for hardwired
+  gammas.  NOTE:  Requires CDMSsources cdms-sources-V00-03-04 or later.
+
+- interface/Am241HolderMessenger:  Add selection of hardwired gammas.
+
+- iZip100mm_Am241.mac:  Use hardwired gammas with source holder.
+
+27 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-05)
+-----------------------------------------------------------
+- detectors/Am241SourceHolder:  Use new Messenger, add missing Set/Get
+  functions for source activity, fix bug in atom-position generation.  Drop
+  use of G4Region.  Add flag to draw object opaque vs. wire frame.
+
+- interface/CDMSGeomMessenger:  Replace Am241Source with source-holder as
+  real source; leave old version as "Am241toy".  Move GeometryManager to
+  data member.
+
+- interface/Am241HolderMessenger:  New class to interact with source holder.
+
+22 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-04)
+-----------------------------------------------------------
+- detectors/Am241SourceHolder:  Change to subclass of CDMSVSourceConstruction:
+  this makes it a "real source", and really should be in the CDMSsources
+  package (which would lead to circular dependences).  Add full support for
+  active sources in each canister, with Am-241 decays generated only in
+  region close to the lead collimator.
+
+22 April 2011  Michael Kelsey (SLAC)
+------------------------------------
+- detectors/Am241SourceHolder:  Add list of source names; create active
+  Am-241 plug as daughter volume of source puck, and define a G4Region
+  for use by actual source generator.  Change phi positions of canisters to
+  match source layout drawing (engineering drawing is reversed).  Add some
+  "tolerance" gaps between components to avoid geometry errors.
+
+- bare-Am241holder.mac:  Change cutaway plane and viewpoint.
+- overlaps_holder.mac:  Fix name of macro.
+
+21 April 2011  Michael Kelsey (SLAC)
+------------------------------------
+- detectors/Am241SourceHolder.cc: Implement PrintParameters(), change phi
+  positions of canisters to match drawing alignment with sides, corners.
+
+- detectors/CDMSZipConstruction.cc: Change ZIP/housing clearance to 0.67 mm,
+  fix bug in calculation of housing radius (should be dist to side, not to
+  corner).
+
+- bare-Am241holder.mac:  Add cutaway view of three sources.
+- overlaps_holder.mac:  New geometry test of source holder.
+
+21 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-03)
+-----------------------------------------------------------
+- G101a.mac:  Add configuration parameters for 100 mm ZIP with Y-flats.
+
+- bare-Am241holder.mac:  New macro to draw "housing lid" plate and source
+  holder for Am-241, used during G101 test run.
+
+- iZip100mm_Am241.mac:  Add flats (only Y axis has them).
+
+- detectors/Am241SourceHolder:  New class to define physical (mass) geometry
+  for "housing lid" source holder.  Does not yet include active sources.
+  The layout does not yet match the engineering drawings; this is a placeholder.
+
+- interface/CDMSGeomMessenger.cc:  Add "holder" to Detector candidates to
+  make drawing of new Am241SourceHolder.  Remove redundant #includes.
+
+- interface/CDMSGeometryManager:  Add GetAm241Holder() accessor.
+ 
+21 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-02)
+-----------------------------------------------------------
+- detectors/CDMSTowerConstruction.cc:  Use CDMSGeometryManager to get ZIP.
+
+20 April 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-14, -V00-04-01)
+-----------------------------------------------------------------------
+- G101a.mac:  New macro to be used for simulations of G101 (4" wafer) test.
+  Derived from iZip100mm_Am241.mac with addition of flats and standoff of
+  Am-241 plate from top of crystal.
+
+- detectors/CDMSZipHit.hh, CDMSVetoHit.hh:  Make all GetXXX() accessors const.
+
+15 April 2011 Kristi Schneck (Stanford/SLAC)
+-------------------------------------------
+- iZip100mm_Am241.mac: Updated setSrcRad, setSrcPos, and setSrcDir 
+  commands to reflect changes in code
+
+28 March 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-04-00, 20 Apr 2011)
+------------------------------------------------------------------------
+- detectors/CDMSMultiTowerConstruction, detectors/CDMSShieldConstruction,
+  detectors/CDMSTowerConstruction, detectors/CDMSTowerPattern,
+  detectors/CDMSTowerSupportConstruction, 
+  detectors/CDMSVesselConstruction: Eliminate all of the "UxeXXX()" pointer
+  passing functions, replacing them with accessors to CDMSGeometryManager.
+
+- interface/CDMSGeometryManager:  Add CDMSTowerPattern.
+
+22 March 2011  Michael Kelsey (SLAC)
+------------------------------------
+- interface/CDMSGeometryManager:  NEW class to provide "singleton" versions
+  of geometry components, so all cross-dependencies can be satisfied without
+  having to pass pointers around.
+
+- interface/CDMSGeomMessenger.cc:  Use GeometryManager to get detector
+  components.
+
+- interface/CDMSGeomConstructor.cc:  Do not delete detector components here;
+  now owned by GeometryManager.
+
+- 7tower-draw.mac:  Add central "tipped" view showing tower layout
+- 7tower-shield.mac:  Adjust viewer configuration
+- bare-shield.mac:  Reduce verbosity
+- shield-draw.mac:  Set ZIP to 4" dimensions
+
+15 February 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-13)
+--------------------------------------------------------------
+- CDMSMultiTowerConstruction.cc, CDMSShieldConstruction.cc,
+  CDMSTowerConstruction.cc, CDMSTowerSupportConstruction.cc,
+  CDMSVesselConstruction.cc, CDMSZipConstruction.cc: Report component total
+  mass (G4LogicalVolume::GetMass()) at end of BuildGeometry(), just before
+  logical volume is returned.
+
+11 February 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-12)
+--------------------------------------------------------------
+- interface/CDMSGeomMessenger.cc:  Add "shield" as Detector option, to draw
+  empty veto shielding for test purposes.
+
+- detectors/CDMSShieldConstruction.cc:  Allow user to set zero veto panels,
+  to get just poly/lead shells.  Fix bugs in calculation of shielding cylinders.
+
+- bare-shield.mac, bare-veto.mac: Draw empty shielding, with and without
+  scintillator veto panels.
+
+10 February 2011  Michael Kelsey (SLAC)
+---------------------------------------
+- detectors/CDMSMultiTowerConstruction.cc:  Move tower update earlier in
+  FillExtraParameters(), simplify one diagnostic message.
+
+- detectors/CDMSTowerPattern:  Resolve bug caused by tower registration
+  change below.  Separate tower parameters from UseTower() function, so they
+  can be updated by GeneratePattern(), e.g., after an Optimize() call, and
+  add a generic function so "any" parameter change can trigger reset().
+
+5 February 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- detectors/CDMSMultiTowerConstruction.cc:  Register Tower with TowerPattern
+  in ctor.
+
+- detectors/CDMSTowerPattern:  Add new Optimize(mass) function to work out
+  "best guess" tower layout and number of ZIPs per tower, to achieve desired
+  target mass.  Currently starts with user's parameters and tweaks them to
+  get a convex pattern as close to target mass as possible.  Required some
+  supporting code changes.
+
+- detectors/CDMSTowerConstruction.hh:  Add accessor to return ZIP geometry.
+
+- detectors/CDMSZipConstruction:  Add accessors to return G4Material pointers.
+
+- interface/CDMSTowerPatternMessenger:  Add new command to call Optimize().
+
+4 February 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-11)
+-------------------------------------------------------------
+- detectors/CDMSTowerPattern.cc:  Add missing "return" for triplet core.
+- 7tower-draw.mac: Change output mode to "pixmap" for drawable result.
+- shield-draw.mac: Change output mode to "pixmap," use 7-tower detector.
+- zip+source.mac: Fix config parameters for Am-241 source plate.
+
+26 January 2011  Dennis Wright (SLAC) (cdms-ggeom-V00-03-10)
+------------------------------------------------------------
+- add sensitivity to veto scintillator panels, and magenta squares to
+  veto hit display
+- add classes CDMSVetoHit and CDMSVetoSD
+- to be used with tag cdms-actions-V00-01-02 or later
+
+26 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- detectors/CDMSTowerPattern:  Rewrite hexagonal layout algorithm: towers
+  are built in ring order (not index order), and outermost partial ring has
+  positions sorted by radius to ensure most compact filling.  Move SetCenter()
+  implementation to .cc file, if pattern already generated, just shift
+  positions to new center, rather than recomputing from scratch.
+
+23 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- detectors/CDMSTowerPattern:  Finish implementing "triplet" hexagonal
+  layout.  Complete "rings" are positioned correctly, but partial rings have
+  uniform "phi" spacing, rather than minimizing radial extent.
+
+22 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- interface/CDMS_UIcmdShieldLayer.cc:  Fix unitialized loop variable.
+
+- detectors/CDMSTowerPattern:  Add alternative hexagonal layout, with
+  three towers in a triangle around the center point.  Refactored layout
+  calculations to support both models; "triplet" version is not yet fully
+  implemented or selected.
+
+21 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-09)
+-------------------------------------------------------------
+- detectors/CDMSTowerPattern:  Replace "magic number" layout codes with
+  enumerator, and include generic "hexagonal" close packing, to support
+  "Option B" design.
+
+- interface/CDMSTowerPatternMessenger:  Make "Code" take a string input, and
+  map strings onto new enumerator values (see above).
+
+- *.mac:  Replace "/CDMS/Layout/Code <number>" with new strings (ring, grid)
+
+21 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- 7tower-shield.mac:  Complete 100kg strawman detector, with shielding.
+  Generates 1000 surface-electron events at center of detector.
+
+- 7tower-draw.mac:  Reduce verbosity of vis commands.
+
+- *.mac:  Following discussion in GEANT4 Hypernews
+(http://hypernews.slac.stanford.edu/HyperNews/geant4/get/visualization/602.html)
+  replace all viewpointThetaPhi directives with "upVector" to set
+  orientation of dectector.
+
+- detectors/CDMSZipSD.cc:  Suppress diagnostic printout.
+
+- detectors/CDMSMultiTowerGeometry:  Modify placement functions so that
+  towers are always put inside vacuum vessel; latter may optionally be placed
+  inside veto shielding.  Fixes an overlap problem seen with 7tower-shield.mac.
+
+15 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-08)
+-------------------------------------------------------------
+- detectors/CDMSShieldConstruction:  Handle arbitrary regular polygons
+  (even- or odd-sided) for side veto panels.  Each middle panel is checked
+  geometrically for intersection with the two cryostat pipe stems, and
+  appropriately penetrations are made, at whatever angle is necessary.  At
+  corners, adjacent panels may have partial holes cut in the overlap region.
+  A collection of support functions are added to perform the calculations:
+
+    G4bool PanelIntersectsVacStem(G4int index, G4double& panelY);
+    G4bool PanelIntersectsFridgeStem(G4int index, G4double& panelY);
+    G4LogicalVolume* MakeVacHoleInPanel(G4VSolid* panel, G4int index,
+                                      G4double holeY);
+    G4LogicalVolume* MakeFridgeHoleInPanel(G4VSolid* panel, G4int index,
+                                      G4double holeY);
+    G4LogicalVolume* MakePipeHoleInPanel(G4VSolid* panel, G4int index,
+                                       G4double radius, G4double holeY,
+                                       G4double holeZ);
+  
+    void GetCornersOfPanel(G4int index, G4Point3D& right, G4Point3D& left);
+    G4double DistanceToPipe(const G4Point3D& right, const G4Point3D& left);
+
+- interface/CDMSShieldMessenger.cc:  Simplify range limit on side panels,
+  to require only N>2.  With above changes, any regular polygon is supported.
+
+14 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- interface/CDMSShieldMessenger:  Add range limit for NSidePanels<=12, to
+  avoid multiple penetrations at corners.  To support fully general case,
+  would need to compare boundary of pipe stems with panel corners, and
+  puncture more than one, and would need to apply rotated penetrations.
+
+- detectors/CDMSShieldConstruction.cc:  Determine mother "radius" (X/Y half
+  length) by applying middle-panel transforms directly to outermost corner.  
+
+13 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-07)
+-------------------------------------------------------------
+- interface/CDMS_UIcmdShieldLayer.cc:  Set parameter names for panel counts.
+
+- interface/CDMSShieldMessenger: Use CDMSMessengerBase base class.  Use
+  CDMS_UIcmdShieldLayer in place of blocks of repeated parameters.  Add all
+  "missing" commands for adjustable parameters, with range limits on panel
+  counts (dimensions ought to be range limited as well).
+
+- detectors/CDMSShieldConstruction: Drop individual layer parameter
+  functions.  Widths and shifts of side panels computed using trig to allow
+  for arbitrary polygons.  Refactor PlaceBarrelVeto() to do each side ring
+  separately.  Compute mother-volume dimensions from veto panel positions.
+
+- detectors/CDMSTowerSupportConstruction:  Increase verbosity level for some
+  computational sanity checks.
+
+- shield-draw.mac:  Turn off verbosity.
+
+12 January 2011  Michael Kelsey (SLAC)
+--------------------------------------
+- interface/CDMS_UIcmdShieldLayer:  New G4UIcommand subclass to handle all
+  four shielding layer parameters (plus unit) in one line.
+
+- detectors/CDMSShieldConstruction.hh:  Add LayerData::Copy() function to
+  transfer numeric values between objects (strings are not copied unless
+  implicit operator=() is used).  Replace "shiftFactor" with
+  sideCornerOverlap dimensioned value.
+
+11 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-06)
+-------------------------------------------------------------
+- detectors/CDMSShieldConstruction: Add parameters for number of veto panels
+  (X and Y at top, total around cylinder), and compute coordinates by index.
+  Replace hardwired arrays with std::vector<>.  Adjust computations of veto
+  panel coordinates to eliminate corner collisions.  Add functions to set all
+  layer parameters at once.
+
+- overlaps_shield.mac:  Activate cylinder_test.  NO overlap errors reported.
+
+9 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-05)
+------------------------------------------------------------
+- detectors/CDMSShieldConstruction: Tweaks to eliminate volume overlaps
+  between shielding layers and pipe stems.  Veto panels still have overlaps.
+
+- shield-draw.mac:  Reduce verbosity of visualization macros.
+- overlaps_shield.mac:  Add commented-out cylinder_test action.
+
+7 January 2011  Michael Kelsey (SLAC)
+-------------------------------------
+- detectors/CDMSShieldConstruction: Split PlaceVeto() into "endcap" and
+  "barrel" functions. Move local parameters for veto panels to data members
+  and compute values in FillVetoParameters().  Report values of computed
+  parameters in PrintParameters().  Tweak hole positions to fix overlaps.
+
+- detectors/CDMSTowerPattern.cc:  Allow user to set numberOfTowers = 0,
+  without causing seg fault.
+
+- detectors/CDMSVesselPattern.cc:  Check for nTowers==0 before building
+  supports (avoid unnecessary work).
+
+- shield-dawn.mac:  New macro to draw empty cryostat with shield, using the
+  DAWN rendering to try to identify overlaps.  Not entirely successful.
+
+- sheild-draw.mac:  Set number of towers to zero to simplify geometry.
+
+6 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-04)
+------------------------------------------------------------
+- detectors/CDMSShieldConstruction: Replace parallel blocks of parameters
+  for each shielding layer with an internal struct (LayerData), including
+  name, material, and vis-attributes.  Simplify BuildShieldLayer() to take
+  LayerData as input.  Provide operator<< for LayerData.  Add
+  PlaceShieldLayer(const LayerData&) to simplify PlaceShielding().  Use
+  rectangular box for mother volume, to enclose endcap scintillators without
+  wasted space.
+
+- labs/NoLab.cc:  Increase size of dummy volume to fully enclose shielding.
+
+- *-draw.mac:  Add filename specifications for all drawings.
+
+6 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-03)
+------------------------------------------------------------
+- shield-draw.mac, cryostat.mac:  Remove geometry overlaps test.  Done in
+  separate overlaps_*.mac jobs.
+
+- overlaps_shield.mac:  Run geometry testing on full veto shield configuration.
+
+- detectors/CDMSShieldConstruction: Move layer-by-layer parameters from
+  BuildShield() to FillExtraParameters(), defining them as data members.
+  Split FillExtraParameters() into separate functions for groups of
+  parameters.  Add all parameters to PrintParameters() output.
+
+5 January 2011  Michael Kelsey (SLAC)
+-------------------------------------
+- shield-draw.mac:  New macro to show 7-tower system with shielding added,
+  in side-view only, and run overlaps test.
+
+- cryostat.mac: Add geometry overlaps test.
+
+- detectors/CDMSVesselConstruction:  Rename some variables to clarify
+  meaning, add list of pipe lengths for each stage, replace "PipeBaseLen"
+  with "PipeOutsideLen" referencing only portion outside cryostat.  Replace
+  usage of "[outer]" indexing with STL-compliant .back().  Compute list of
+  pipe Z values as actual coordinates, not top/bottom offsets.
+
+- detectors/CDMSShieldConstruction.cc:  Follow CDMSVesselConstruction
+  changes, and align pipe penetrations with cryostat positions.  Mother
+  volume still has some misalignment.
+
+- interface/CDMSVesselMessenger.cc:  Follow changes to CDMSVesselConstruction. 
+
+5 January 2011  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-02)
+------------------------------------------------------------
+- interface/CDMSGeomConstructor: Drop "shield" activities here, move to
+  become component of MultiTower detector.
+
+- interface/CDMSGeomMessenger: Drop "shield" activities here, move to become
+  component of MultiTower detector.  Add verbosity setting when geometry
+  components are instantiated.  Add support for RadiogenicSources.
+
+- interface/CDMSMultiTowerMessenger:  New class to support shielding flag.
+
+- detectors/CDMSMultiTowerConstruction:  Add shield, as optional detector
+  component.  If used, it becomes the world volume instead of vacuum vessel.
+
+- detectors/CDMSShieldConstruction:  Activate Messenger stuff, work around
+  problem setting icebox pipe lengths.  There are still some issues with
+  placement (the vessel is not vertically symmetric about the origin).
+
+4 January 2011  Michael Kelsey (SLAC)
+-------------------------------------
+- detectors/CDMSVesselConstruction.hh:  Add access to pipe parameter vectors.
+
+- detectors/CDMSShieldConstruction:  Add pointer to enclosed cryostat
+  structure, fill dependent parameters from it.  Replace local "eps" with
+  base class "tolerance".
+
+28 December 2010  Michael Kelsey (SLAC)
+---------------------------------------
+- interface/CDMSGeomMessenger:  Migrate to new CDMSMessengerBase as base
+  class.  Remove local G4UIdirectory handling.  Test case for deploying new
+  base class generally to all Messengers.
+
+27 December 2010  Michael Kelsey (SLAC)
+---------------------------------------
+- interface/CDMSTowerSupportMessenger.cc:  Fix directory-level guidance.
+- interface/CDMSGeomConstructor.cc:  Remove null-pointer warnings, as they
+  show up before user can change anything.
+
+23 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-01)
+--------------------------------------------------------------
+- detectors/CDMSVesselConstruction:  Add Set/Get functions to return full
+  vectors for vessel and lid thicknesses.
+
+- interface/CDMSVesselMessenger:  Use new CDMSg4base/CDMS_UIcmd.... to
+  address entire vector of values for vessel and lid thicknesses.
+
+23 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-03-00)
+--------------------------------------------------------------
+- interface/*Messenger.cc:  Add SetUnitCategory("Length") to all appropriate
+  parameters.
+
+- geombase/: MOVE entire contents to new CDMSg4base package.
+
+- GNUmakefle:  Remove geombase from SUBDIRS.
+
+- detectors/*.hh,cc:  Change all "geombase" #includes to point to new
+  CDMSg4base package.
+
+22 December 2010  Dennis Wright (SLAC) (cdms-ggeom-V00-02-06)
+-------------------------------------------------------------
+- create shield/veto geometry: detectors/CDMSShieldConstruction.hh, .cc
+  and corresponding messenger class: interface/CDMSShieldMessenger.hh, .cc
+- added ShieldMaterial class to build materials not in NIST db.
+
+18 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-02-05)
+--------------------------------------------------------------
+- detectors/CDMSTowerSupportConstruction:  Add parameters to specify indices
+  of stages where SQUID and FET cards are located, and to shift the mounting
+  point (Z=0) above the bottom of the CF tube.
+
+- detectors/CDMSVesselConstruction.cc: Generalize calculation of cryostat
+  lid positions to use tower support structure.  Add parameter to set number
+  of vacuum vessels separately from total number of vessels.  Replace fixed
+  length arrays with std::vector<>.
+
+- interface/CDMSTowerSupportMessenger:  Add macro commands to set special
+  stage indices.
+
+- interface/CDMSVesselMessenger:  Add macro command for vacuum vessel count.
+
+15 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-02-04)
+--------------------------------------------------------------
+- detectors/CDMSVesselConstruction.cc:  Modify BuildEnvelope() to subtract
+  a chunk from the "short end" of the cylinder so that mother volume's Z
+  range matches physical dimensions of outermost cryostat.  This will allow
+  shielding to be properly wrapped around detector.
+
+- 7tower.mac, 9tower.mac: Remove EPS file output, restore 1000-event run.
+
+14 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-02-03)
+--------------------------------------------------------------
+- detectors/CDMSTowerSupportConstruction:  Add three new parameters for the
+  stage indices of the SQUID and FET readout card mount points, and the
+  stage (bottom surface) where the support is mounted to the innermost
+  cryostat (stage 0 corresponds to the spool/CF boundary).
+
+- detectors/CDMSVesselConstruction:  Vacuum pipe should be nested with
+  separate stems to all vacuum vessels (outer cryostats).  Modify placement
+  functions accordingly, adding index arguments.  Add parameter for number
+  of vacuum cryostats vs. total.  Remove coupling between number of
+  cryostats and number of tower-support stages.
+
+- interface/CDMSTowerSupportMessenger:  Add new UI commands for the new
+  index parameters above.
+
+- interface/CDMSVesselMessenger:  Add new UI command for NVacuum.
+
+13 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-02-02)
+--------------------------------------------------------------
+- 1tower-draw.mac, 7tower-draw.mac,
+  bare-tower.mac, bare-support.mac,
+  cryostat.mac, zip+source.mac:  Simplify drawing-only macros.
+
+11 December 2010  Michael Kelsey (SLAC)
+---------------------------------------
+- CDMSTowerPatternConstruction:  Add origin of coordinates and Set/Get
+  functions to do offset from (0,0,0).
+
+- CDMSVesselConstruction:  Add explicit setting of origin-offset for
+  towerPattern before each use.  Make single tower-support volume, not multi.
+
+- CDMSMultiTowerConstruction:  Add explicit setting of center for towerPattern
+  before placement.
+
+11 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-02-01)
+--------------------------------------------------------------
+Resolve all remaining volume overlap errors from /geometry/test/grid_test 1.
+Individual structures, and full 7-tower and 9-tower detectors, are usable.
+
+- CDMSTowerConstruction:  Add towerRadius parameter for full physical size,
+  without the intertower "clearance."  Return towerRadius in GetRadius().
+
+- CDMSTowerSupportConstruction:  Drop unused parameters from Tower.
+
+- CDMSVesselConstruction:  Drop unused parameters from Tower and
+  TowerSupport, use TowerSupport radius to punch holes in lids.
+
+- overlaps_full.mac:  Drop 9-tower from testing (only do one geometry).
+
+10 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-02-00)
+--------------------------------------------------------------
+Provide more dimensional information for constructed objects through the
+base class:  replace GetMaximumSize() with GetRadius() and GetLength(), add
+position vector with both GetPosition() (replacing GetLocation()) and
+SetPosition() functions.
+
+- geombase/CDMSVDetectorGeometry.hh: See above.
+
+- labs/NoLab:  Follow base class migration; drop local "theOrigin" vector,
+  add data members for radius and height of empty volume (now cylindrical).
+
+- detectors/CDMSMiniDetConstruction:   Follow base class migration; drop
+  local position vector.
+
+- detectors/CKGDetConstruction:   Follow base class migration; drop
+  local position vector.
+
+- detectors/CDMSMultiTowerConstruction:  Follow base class migration; drop
+  local position vector.  Radius and length call through to icebox.
+
+- detectors/CDMSTowerConstruction:  Follow base class migration; drop local
+  position vector.  Return clearance radius and total height.
+
+- detectors/CDMSTowerSupportConstruction:  Follow base class migration; drop
+  local position vector.  Return total radius and total height.
+
+- detectors/CDMSVesselConstruction:  Follow base class migration; drop
+  local position vector.  Total radius returned includes pipe stems.
+
+- detectors/CDMSZipConstruction:  Follow base class migration; drop local
+  positon vector; return outer radius and length depending on whether
+  housing is being built.
+
+- interface/CDMSGeomConstructor:  Replace GetWorldSize() with separate
+  radius and length functions, follow CDMSVDetectorGeometry migration.
+
+- interface/CDMSZipMessenger.cc:  Change SetLocation() to SetPosition().
+
+10 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-07)
+--------------------------------------------------------------
+- detectors/CDMSVesselConstruction.cc:  Repair calculation of Z coordinates
+  of cryostat vessels.  Now align correctly for towers positioned at Z=0.
+
+- detectors/CDMSTowerSupportConstruction.hh:  Add comment in header
+  specifying that Z=0 of mother volume corresponds to the boundary between
+  the copper spool and carbon-fiber support tube.
+
+- 1tower-draw.mac:  Validation macro which positions single tower in icebox.
+
+10 December 2010  Michael Kelsey (SLAC)
+---------------------------------------
+- detectors/CDMSTowerSupportConstruction:  Add data members for bottom and
+  top Z coordinates (set Z=0 at carbon/copper spool boundarary), and repair
+  calculation of readout component positions.
+
+- detectors/CDMSTowerConstruction.cc:  Fix full radius computation
+  to include thickness of coax strips.
+
+- detectors/CDMSVesselConstruction:  Add support functions to construct
+  outer (mother) volume as envelope of cryostat and pipe stems.
+
+- labs/NoLab.cc:  Increase size to 3 m.
+
+- bare-support.mac:  Change viewpoint for more vertical orientation.
+
+- 7tower-draw.mac:  Validation macro with clean side view and cutaway to
+  show the interior midplane.  No source or beamOn.
+
+9 December 2010  Michael Kelsey (SLAC)
+--------------------------------------
+- interface/CDMS*Messenger.cc:  Remove redundant parts of parameter names
+  (e.g., "/CDMS/Vessel/VesselDeltaHeight" -> "/CDMS/Vessel/DeltaHeight").
+
+- interface/CDMSZipMessenger:  Add ZipPositionCmd for placement.
+
+- interface/CDMSGeomConstructor.cc:  Add placement diagostic messages.
+
+- detectors/CDMSTowerConstruction.cc:  Fix radius arrays for BuildLid().
+
+- detectors/CDMSTowerSupportConstruction.cc:  Add diagostics for placements.
+
+- detectors/CDMSVesselConstruction.cc:  Add SetVerboseLevel() to propagate
+  to children; remove holes introduced in outer cryostat lids, allow for
+  no towers.  Fix overlapping volume bugs.
+
+- detectors/CDMSZipConstruction:  Add sensitive detector support, and
+  configurable positioning for use as bare detector.
+
+- detectors/CDMSMiniDetConstruction.cc:  Improve diagnostic messages.
+
+- bare-tower.mac, bare-suppport.mac:  Remove source and beamOn commands, use
+  these for validation only.
+- zip+source.mac:  NEW: CDMSmini geometry with Am-241 source, for validation.
+- cryostat.mac:  NEW: Empty cryostat geometry, for validation.
+- overlaps_*.mac:  NEW: Run geometry validation on different structures.
+
+9 December 2010  Michael Kelsey (SLAC)
+--------------------------------------
+- interface/CDMSGeomConstructor:  Drop partial clean-up of geometry, as it
+  causes segfaults (double delete).  Just replace pointers as necessary
+
+8 December 2010  Michael Kelsey (SLAC)
+--------------------------------------
+- detectors/CDMSTowerSupportConstruction:  NEW class, extracting all the
+  tower support and readout stuff from CDMSVesselConstruction.
+
+- detectors/CDMSVesselConstruction:  Move tower support activities to new
+  class.
+
+- interface/CDMSTowerSupportMessenger:  NEW clas, extracting all the
+  tower support and readout stuff from CDMSVesselMessenger.
+
+- interface/CDMSVesselMessenger:  Move tower support activities to new class.
+
+- interface/CDMSGeomConstructor.cc:  Add tower-support as detector type.
+
+- bare-support.mac:  New macro to generate single tower support structure.
+
+
+8 December 2010  Michael Kelsey (SLAC)
+--------------------------------------
+- detectors/CDMSTowerConstruction.cc:  In AttachSideStrip(), fix rotation
+  so that strips are parallel to sides, not sawtoothed.  Make housing
+  parameters here consistent with those in the ZIP.
+
+- detectors/CDMSZipConstruction:  Make housing parameters data members, pass
+  up to Tower.
+
+3 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-06)
+-------------------------------------------------------------
+- interface/CDMS*Messenger.cc:  Add missing guidance text everywhere.
+- interface/CDMSGeomConstructor.hh:  Make "origin" vector const.
+- interface/CDMSGeomMessenger:  Drop use of "icebox" as separate action.
+  Add "cryo" as one of the regular Detector choices, to instantiate an empty
+  vacuum vessel for testing.
+- interface/CDMSTowerMessenger:  Add command to set number of ZIPs directly.
+- interface/CDMSZipMessenger:  Add command to set flag for building housing.
+
+- detectors/CDMSZipConstruction:  Add flag to build/not build housing.
+- detectors/CDMSTowerConstruction:  Make number of ZIPs separate parameter.
+
+- *.mac:  Add VIS command to write EPS file, add viewpoint setting.
+- bare-tower.mac:  New macro to generate single tower, without cryostat.
+
+1 December 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-05)
+-------------------------------------------------------------
+Add more verbosity withing geometry construction functions.
+
+	geombase/CDMSVDetectorGeometry.hh,cc
+	detectors/CDMSMultiTowerConstruction.cc
+	detectors/CDMSTowerConstruction.cc
+	detectors/CDMSTowerPattern.cc
+	detectors/CDMSVesselConstruction.cc
+	detectors/CDMSZipConstruction.cc
+
+- detectors/CDMSTowerPattern:  Cache transformation matrices and return by
+  const-ref.  Encapsulate index checking.
+
+- 9tower.mac:  Copy of 7tower.mac, showing 9-tower diamond pattern.
+
+30 November 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-04)
+--------------------------------------------------------------
+- GNUmakefile: Expand library dependency list to deal with circular
+  depencence between CDMSsources and CDMSgeometry.
+
+30 November 2010  Michael Kelsey (SLAC)
+---------------------------------------
+Expand verbosity support for new modular construction classes.
+SetVerboseLevel is overridden to propagate value to constituent classes, and
+new parameter reporting functions are defined (including operator<<).
+
+- geombase/CDMSVDetectorGeometry:  Add operator<<, PrintParameters() and
+  related functions.  New .cc file provides implementation of output functions.
+
+- detectors/CDMSMultiTowerConstruction:  Add PrintParameters(), verbosity.
+- detectors/CDMSTowerConstruction:  Add PrintParameters(), verbosity.
+- detectors/CDMSTowerPattern:  Add PrintParameters(), verbosity.
+- detectors/CDMSVesselConstruction:  Add PrintParameters(), verbosity.
+- detectors/CDMSZipConstruction:  Add PrintParameters(), verbosity.
+
+- 7tower.mac:  New settings: /CDMS/verbose 2, CDMS "along y" viewpoint.
+
+28 November 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-03)
+--------------------------------------------------------------
+- detectors/CDMSVesselConstruction.cc:  Fix errors in volume positioning.
+- 7tower.mac:  Set beamOn to one event.  Without a source, job crashes
+  anyway.
+
+28 November 2010  Michael Kelsey (SLAC)
+---------------------------------------
+Fix abort reported in previous History entry.
+
+- geombase/CDMSVDetectorGeometry.hh:  Add FillExtraParameters() to allow
+  all classes to do consistent parameter loading from constituents.
+
+- detectors/CDMSVesselConstruction.h:  Make FillExtraParameters() public.
+- detectors/CDMSTowerConstruction.hh:  Make FillExtraParameters() public.
+- detectors/CDMSMultiTowerConstruction:  Add FillExtraParameters() to
+  call through to constituents.
+
+28 November 2010  Michael Kelsey (SLAC)
+---------------------------------------
+NOTE:  The current version of CDMSMultiTowerConstruction aborts during
+BuildGeometry().  The abort is triggered in CDMSVesselConstruction because
+some of the derived quantities are unfilled (zero).  All the subdetectors
+need to be configured to fill and pass on their derived quantities before
+the geometry phase begins.
+
+- detectors/CDMSVesselConstruction:  Forgot to implement BuildVesselTop
+  (analogue to BuildDiskWithHoles in CKGDet).  
+- detectors/CDMSMultiTowerConstruction.cc:  Move sub-detector pointer
+  assignments to ctor.
+
+26 November 2010  Michael Kelsey (SLAC)
+---------------------------------------
+Create preliminary Messengers for new modular geometry system.  Commands are
+defined, with names and default values.  No guidance is provided yet for the
+individual parameters.
+
+- interface/CDMSTowerMessenger:  UI commands for CDMSTowerConstruction.
+- interface/CDMSTowerPatternMessenger:  UI commands for CDMSTowerPattern.
+- interface/CDMSVesselMessenger:  UI commands for CDMSVesselConstruction.
+- interface/CDMSZipMessenger:  UI commands for CDMSZipConstruction.
+
+- detectors/CDMSTowerPattern, detectors/CDMSVesselConstruction,
+  detectors/CDMSTowerConstruction, detectors/CDMSZipConstruction:  Add Get
+  and Set functions needed by Messengers, above, and fix some compiler
+  warnings.  Add Messengers as data members of each class.
+
+- 7tower.mac, kgdet.mac:  Simple "template-style" macros to demonstrate new
+  full-detector constructions.  "7tower.mac" will be extended to show
+  setting of most parameters.
+
+22 November 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-02)
+--------------------------------------------------------------
+- geombase/CDMSVDetectorGeometry.hh:  Add BuildGeometryCopy() function to
+  take copy-number argument; add copyNumber data member for use by builders
+  which make multiple placements.
+
+- detectors/CDMSMultiTowerConstruction:  Complete detector including
+  multiple towers and cryostat.
+
+- detectors/CDMSTowerConstruction: Single ZIP tower including housings and
+  readout.
+
+- detectors/CDMSTowerPattern:  Calculator to return positions and rotation
+  vector for multiple tower geometry.  Assumes central tower is at origin.
+
+- detectors/CDMSVesselConstruction:  Nested cryostat with tower
+  support/readout structures.
+
+- detectors/CDMSZipConstruction:  Single iZIP or mZIP with housing segmenet.
+
+- detectors/CKGDetConstruction: Add comments for clarity.
+
+- interface/CDMSGeomMessenger.cc:  Add new detector classes.
+
+5 November 2010  Dennis Wright (SLAC) (cdms-ggeom-V00-01-01)
+------------------------------------------------------------
+Clean up and refactor CKGDetConstruction.  All the support and electronics
+parts of the towers have been moved to a single method.  Now only once 
+instance is build, and copies of it are placed.
+
+28 October 2010  Michael Kelsey (SLAC) (cdms-ggeom-V00-01-00)
+---------------------------------------------------------------
+Reorganize abstract base classes and Messengers to support constructing
+multiple geometries (choosing labs, detectors, and sources) from macros.
+
+- New directory containing top-level geometry builder:
+  interface/GNUmakefile
+  interface/CDMSGeomConstructor.hh,cc
+  interface/CDMSGeomMessenger.hh,cc
+
+- geombase/CDMSVSourceConstruction.hh:  MOVE to CDMSsources
+
+- geombase/CDMSVLabConstruction.hh: REMOVE.  Labs now inherit from
+  CDMSVDetectorGeometry.
+
+- geombase/CDMSVMaterials: Make GetMaterial() const, and allow direct
+  instantiation.
+
+- geombase/CDMSVDetectorGeometry.hh:  Add GetMaximumSize() member function
+  to support computation of necessary size of world volume.
+
+- detectors/CDMSMiniDetConstruction: Add member functions to support
+  CDMSVDetectorGeometry.
+
+- detectors/CKGDetConstruction:  Add GetMaximumSize() member function
+
+- labs/NoLab:  Change base class to CDMSVDetectorGeometry, remove
+  constructor arguments and add necessary support member functions.
+
+- labs/NoLabMaterials.cc:  Fix path for unqualified #include.
+
+28 October 2010 Dennis Wright (SLAC)
+------------------------------------
+- create class CKGDetConstruction which is the "100 kg" configurable
+  detector 
+
+26 October 2010 Michael Kelsey (SLAC)
+-------------------------------------
+Eliminate separate History files in subdirectories.  Put everything here.
+
+25 October 2010 Michael Kelsey (SLAC)
+-------------------------------------
+- iZip100mm_Am241.mac:  Add "/CMDS/" to command paths as needed.
+- labs/NoLabMessenger.cc:  Add "/CMDS/" to command paths.
+- detectors/CDMSMiniGeomMessenger.cc:  Add "/CMDS/" to command paths.
+
+17 September 2010 Michael Kelsey (SLAC) (cdms-ggeom-V00-00-06)
+--------------------------------------------------------------
+- iZip100mm_Am241.mac:  New macro to drive test job with 100 mm iZip wafer
+  and (new) Am-241 source.  Dimensions and whatnot are configured at runtime
+  in this macro, rather than in the executable.
+
+9 September 2010 Dennis Wright (SLAC) (cdms-ggeom-V00-00-05)
+------------------------------------------------------------
+- create virtual class CDMSVSourceConstruction.hh.  It is a base class for
+   the geometry construction of radiogenic and cosmogenic sources.  It 
+   derives from the G4VUserPrimaryGeneratorAction class, thereby allowing 
+   the active source position to be tied to the true geometrical position.
+
+- CDMSVLabConstruction: add argument in constructor which allows radioactive
+   sources to be passed into the lab environment, on the same footing as 
+   detectors.
+
+- NoLab: add constructor argument for source class
+
+- CDMSVMaterials.hh: class is no longer pure virtual in order to allow its 
+   use as a default
+ 
+- CDMSMiniDetConstruction.cc: change detector position from -0.5 cm to 0.5 cm
+
+- CDMS_GGSim.cc: re-arrange calling order of mandatory user actions to
+   accomodate new source implementation.  Replace CDMSDemoSource with new 
+   Am241Source
+    
+31 August 2010 Michael Kelsey (SLAC) (cdms-ggeom-V00-00-04)
+-----------------------------------------------------------
+- GNUmakefile:  Fix order of CDMS libraries for linking.
+
+30 July 2010 Michael Kelsey (SLAC) (cdms-ggeom-V00-00-03)
+---------------------------------------------------------
+- Remove "management" subidrectory, replacing with new CDMSactions package.
+
+- CDMS_GGSim.cc:  Replace CDMSMini*Action with CDMSactions/CDMS*Action.
+
+- GNUmakefile:  Remove "management" from SUBDIRS list, add -lCDMSactions.
+
+27 July 2010 Michael Kelsey (SLAC) (cdms-ggeom-V00-00-02)
+---------------------------------------------------------
+- Remove "sources" subdirectory, replacing with new CDMSsources package.
+
+- CDMS_GGSim.cc:  Replace CDMSMiniSource with CDMSsources/CDMSDemoSource.
+
+- GNUmakefile:  Remove "sources" from SUBDIRS list, add -lCDMSsources and
+  ROOT support.
+
+27 July 2010 Michael Kelsey (SLAC) (cdms-ggeom-V00-00-01)
+---------------------------------------------------------
+- In *all* subdirectories, eliminated include/ and src/ splitting in favor
+  of flat structure.
+
+- In *all* subdirectories, replaced GNUmakefiles with single-line versions
+  compatible with new CDMSbuild system.
+
+- In *all* source and include files, extend #include to include paths.
+
+- GNUmakefile:  Added BINS and CDMSLIBS definitions for executable.
+
+- CDMS_GGSim.cc:  Added paths to #includes.  Note that executable won't link
+  at the moment, due to G4Vis* undefined symbols.
+
+21 July 2010 Dennis Wright (SLAC) (cdms-ggeom-V00-00-00)
+--------------------------------------------------------
+- set up general CDMS geometry to be used for Geant4 simulations
+- create subdirectories 
+    geombase/    virtual base classes used throughout the simulation   
+    labs/        geometry of labs or caverns 
+    detectors/   geometry and sensitivity of detectors 
+    sources/     code for radioactive and cosmic sources
+    management/  mandatory G4 user classes and I/O
+- add code for CDMSMini simulation as a prototype

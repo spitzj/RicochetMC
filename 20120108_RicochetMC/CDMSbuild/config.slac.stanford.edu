@@ -1,0 +1,12 @@
+# $Id: config.slac.stanford.edu,v 1.8 2011/10/29 04:35:41 kelsey Exp $
+# CDMS local configuration for SLAC RedHat Linux machines
+#
+# 20110517 Use SLAC-local "hacked" verion of 9.3 with Shielding and mu-nuclear
+# 20110520 Use SLAC 9.4-patch-01; leave "hacked" version in comments
+# 20111028 Update to 9.4-patch-02; hack to revert RHEL6 to RHEL5 temporarily
+
+### G4INSTALL=/afs/slac.stanford.edu/package/geant4/9.3.p02-cdms
+G4INSTALL=/afs/slac.stanford.edu/package/geant4/9.4.p02
+ROOTSYS=/afs/slac.stanford.edu/package/cernroot/52600
+G4ENV=env-`CDMSbuild/slac-linux /etc/taylor.info`
+G4WORKDIR=`pwd | xargs a2nfs -t -n`

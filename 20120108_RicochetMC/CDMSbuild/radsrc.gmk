@@ -1,0 +1,14 @@
+# $Id: radsrc.gmk,v 1.1 2011/10/07 20:05:15 kelsey Exp $
+#
+# Bring in RADSRC information to support compilation and linking
+#
+# 20111007  Michael Kelsey
+
+ifdef VERBOSE
+$(call info,loaded CDMSbuild/radsrc.gmk)
+endif
+
+ifneq (,$(RADSRC_HOME))
+  CPPFLAGS += -DCDMS_USE_RADSRC -I$(RADSRC_HOME)/src/libradsrc/
+  LOADLIBS += -L$(RADSRC_HOME)/lib/ -lradsrc
+endif

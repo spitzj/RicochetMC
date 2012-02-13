@@ -1,0 +1,58 @@
+# $Id: zip+gammas.mac,v 1.5 2011/07/21 21:25:42 kelsey Exp $
+#
+# Macro file to generate radiogenic gammas around ZIP 
+#
+# 20110525  M. Kelsey -- Add code for isotope decays, center sphere on ZIP
+# 20110719  K. McCarthy -- Change AddLines to AddSpectrum
+
+/control/verbose 0
+/run/verbose 0
+/CDMS/verbose 0
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+
+/CDMS/Detector zip
+/CDMS/Zip/Radius 5.0 cm
+/CDMS/Zip/Thickness 3.3 cm
+
+# Suppress side cuts for 100 mm crystal
+/CDMS/Zip/Axis1Length 0. cm
+/CDMS/Zip/Axis2Length 0. cm
+
+# Position crystal with bottom at Z=0, to match DMC coordinates
+/CDMS/Zip/Position 0. 0. 1.65 cm
+
+# Spherical source of gammas from cobalt and potassium contaminants
+/CDMS/Source sphere
+/CDMS/GammaSphere/Radius 25 cm
+/CDMS/GammaSphere/Position 0. 0. 1.65 cm
+/CDMS/GammaSphere/Direction true
+
+### Use these lines for hardcoded spectra, collimated radially
+/CDMS/GammaSphere/AddSpectrum Co60 0.5
+/CDMS/GammaSphere/AddSpectrum K40 0.5
+
+### Use these lines for RadioactiveDecay, isotropic emission
+### /CDMS/GammaSphere/AddIsotope 95 241
+### /grdm/nucleusLimits 240 250 1 100
+
+/CDMS/updateGeom
+/grdm/allVolumes
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/set/viewpointThetaPhi 60 0		# Looking down from above
+/vis/drawVolume
+
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/set/autoRefresh true
+
+/tracking/verbose 1
+/run/beamOn 1000
+
+/vis/ogl/set/printFilename zip+gammas
+/vis/ogl/printEPS
+

@@ -1,0 +1,49 @@
+# $Id: G102a.mac,v 1.4 2011/07/01 01:53:02 kelsey Exp $
+# Macro file to run single 4" ZIP with radioactive source plate
+#
+# 20110617  M. Kelsey -- Copy of G101a with mods for G102 run.
+# 20110623  M. Kelsey -- Set limits so that Np-237 doesn't get decayed, use
+#		2 mil Kapton tape 
+
+/control/verbose 0
+/run/verbose 0
+/CDMS/verbose 0
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+
+/CDMS/Detector zip
+/CDMS/Zip/Radius 5.0 cm
+/CDMS/Zip/Thickness 3.333 cm
+
+# 100mm crystal has flats only along Y axis
+/CDMS/Zip/Axis1Length 10.0 cm
+/CDMS/Zip/Axis2Length 9.837 cm
+
+# Using heaxgonal housing for G101 run
+/CDMS/Zip/MakeHousing true
+/CDMS/Zip/HousingSides 6
+
+# Position crystal with bottom at Z=0, to match DMC coordinates
+/CDMS/Zip/Position 0. 0. 1.6665 cm
+
+# Put source plate above top of ZIP crystal (2mm gap)
+/CDMS/Source Am241
+/CDMS/Am241/UseCDMSGammas
+/CDMS/Am241/Direction 0. 0. -1.
+/CDMS/Am241/Radius 5.0 cm
+/CDMS/Am241/Position 0. 0. 3.5 cm
+/CDMS/Am241/FoilThickness 0.0508 mm
+/CDMS/Am241/FoilMaterial G4_KAPTON
+/CDMS/Am241/UseZip
+/CDMS/Am241/DrawSolid 0
+
+/CDMS/updateGeom
+###/grdm/allVolumes
+###/grdm/nucleusLimits 240 250 1 100
+###/grdm/decayDirection 0. 0. -1.
+
+# 
+# 10000 events
+#
+/run/beamOn 10000

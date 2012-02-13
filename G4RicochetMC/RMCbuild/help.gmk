@@ -1,0 +1,25 @@
+# $Id: help.gmk,v 1.2 2010/08/31 00:07:39 kelsey Exp $
+# Special target to print information about RMC Makefiles
+#
+# 20100722  Michael Kelsey
+
+ifdef VERBOSE
+$(call info,loaded RMCbuild/help.gmk)
+endif
+
+.PHONY : help
+help :
+	@$(ECHO) "RMC Makefile system.  Targets available are" ;\
+	 $(ECHO) "help :        Print this information" ;\
+	 $(ECHO) "clean :	Delete files generated during builds" ;\
+	 $(ECHO) "veryclean :	Delete all created files and directories" ;\
+	 $(ECHO) "include :     Add .hh file symbolic links to include/ dir" ;\
+	 $(ECHO) "depend :      Make source code dependencies (.d files)" ;\
+	 $(ECHO) "lib :         Build libraries for all packages" ;\
+	 $(ECHO) "bin :         Build executables for all packages" ;\
+	 $(ECHO) "<p>.<targ> :  Build specified target for package <p>" ;\
+	 $(ECHO) ;\
+	 $(ECHO) "Add VERBOSE=yes to your command for debugging" ;\
+	 $(ECHO) ;\
+	 $(ECHO) "NOTE:  You must configure your GEANT4 environment" ;\
+	 $(ECHO) "for the compilation and linking to work correctly"

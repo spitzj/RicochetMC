@@ -1,0 +1,62 @@
+# $Id: geant4.gmk,v 1.11 2011/10/22 00:11:33 kelsey Exp $
+#
+# Bring in GEANT4 information to support compilation and linking
+#
+# 20100205  Michael Kelsey
+# 20100826  Fix warning messages about G4 global build, skip if CLEAN target,
+#           look for both .a and .so library.
+# 20110121  Add $(GDMLLIBS) manually, not handled by ./Configure
+# 20111017  Give -I options a separate name, check for known missing dirs
+# 20111021  Check if G4INCLUDE is populated, rather than defined
+
+ifdef VERBOSE
+$(call info,loaded CDMSbuild/geant4.gmk)
+endif
+
+ifneq (clean,$(MAKECMDGOALS))		### Skip everything if just doing clean
+
+ifndef G4INSTALL
+$(error CDMS requires GEANT4.  Please set up your G4 environment.)
+endif
+
+include $(G4INSTALL)/config/architecture.gmk
+
+# Get all the compilation flags from GEANT4 itself
+CPPFLAGS += $(shell $(G4INSTALL)/Configure -cppflags|grep '^-')
+INCFLAGS += $(shell $(G4INSTALL)/Configure -incflags|grep '^-')
+CXXFLAGS += $(shell $(G4INSTALL)/Configure -cxxflags|grep '^-')
+LDFLAGS  += $(shell $(G4INSTALL)/Configure -ldflags|grep '^-')
+
+include $(G4INSTALL)/config/G4UI_USE.gmk
+include $(G4INSTALL)/config/G4VIS_USE.gmk
+include $(G4INSTALL)/config/interactivity.gmk
+include $(G4INSTALL)/config/analysis.gmk
+
+# If separate include directories are being used, add known missing ones
+ifeq (,$(wildcard $(G4INCLUDE)/*.hh))
+  INCFLAGS += -I$(G4INSTALL)/source/processes/hadronic/models/chiral_inv_phase_space/cross_sections/include
+  INCFLAGS += -I$(G4INSTALL)/source/processes/hadronic/models/chiral_inv_phase_space/processes/include
+  INCFLAGS += -I$(G4INSTALL)/source/processes/hadronic/models/chiral_inv_phase_space/fragmentation/include
+  INCFLAGS += -I$(G4INSTALL)/source/physics_lists/builders/include
+  INCFLAGS += -I$(G4INSTALL)/source/physics_lists/lists/include
+endif    
+
+CPPFLAGS += $(INCFLAGS)
+
+# Global libraries must be listed by hand (./Configure can't do it)
+G4LIBDIR := $(G4LIB)/$(G4SYSTEM)
+G4GLOBAL_LIBS := $(wildcard $(G4LIBDIR)/libG4global.*)
+
+ifneq (,$(G4GLOBAL_LIBS))
+  LDLIBS += $(VISLIBS) -lG4interfaces -lG4error_propagation
+  LDLIBS += -lG4readout -lG4physicslists -lG4run -lG4event -lG4tracking
+  LDLIBS += -lG4parmodels -lG4processes -lG4digits_hits -lG4track -lG4particles
+  LDLIBS += -lG4geometry -lG4materials -lG4graphics_reps -lG4intercoms
+  LDLIBS += -lG4global $(LOADLIBS)
+else
+  LDLIBS += $(shell $(G4INSTALL)/Configure -ldlibs|grep '^-')
+endif
+
+LDLIBS += $(GDMLLIBS)
+
+endif	### NOT clean

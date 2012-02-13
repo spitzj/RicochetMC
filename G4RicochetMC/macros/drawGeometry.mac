@@ -1,0 +1,29 @@
+# This is a general macro for testing features of the
+# RICOCHET/REvOLT-0 Monte Carlo v0.1 (RMC)
+#
+# Adam Anderson
+# adama@mit.edu
+#
+
+/control/verbose 1
+/run/verbose 1
+/RMC/verbose 3
+
+/RMC/Lab MITReactor
+#/RMC/Detector shield
+#/RMC/Detector cryo
+#/RMC/Detector tower
+/RMC/Detector experiment
+/RMC/UseShield false
+/RMC/UseCryostat true
+/RMC/UseTower true
+#/RMC/Source neutronwall
+/RMC/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/set/viewpointThetaPhi 85 270		# Slightly tilted
+/vis/viewer/addCutawayPlane 0 0 0 cm 0 1 0
+/vis/drawVolume
+#/vis/viewer/flush

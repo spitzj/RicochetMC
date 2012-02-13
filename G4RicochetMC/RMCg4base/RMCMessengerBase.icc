@@ -1,0 +1,31 @@
+#ifndef RMCMessengerBase_icc
+#define RMCMessengerBase_icc 1
+////////////////////////////////////////////////////////////////////////
+//                                                                    //
+//  File:        RMCMessengerBase.icc                                 //     
+//  Description: Implementation of templated function in class, to    //
+//		 create G4UIcommands with consistent path string.     //
+//                                                                    //
+//  Author:      Adam Anderson (MIT)			              //
+//		 Adapted from Michael Kelsey (SLAC)                   //
+//  Date:        14 January 2012                                      //
+//                                                                    //
+//////////////////////////////////////////////////////////////////////// 
+
+#include "RMCg4base/RMCMessengerBase.hh"
+#include "G4UIdirectory.hh"
+
+
+template <class T>
+T* RMCMessengerBase::CreateCommand(const G4String& commandName,
+				    const G4String& description) {
+  G4String path = cmdDir ? cmdDir->GetCommandPath() : "";
+  path += commandName;
+
+  T* theCmd = new T(path.c_str(), this);	// <T> must be G4UIcommand!
+  theCmd->SetGuidance(description.c_str());
+
+  return theCmd;
+}
+
+#endif /* RMCMessengerBase_icc */

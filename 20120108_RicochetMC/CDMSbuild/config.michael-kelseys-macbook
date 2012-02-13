@@ -1,0 +1,7 @@
+# $Id: config.michael-kelseys-macbook,v 1.6 2011/11/13 14:33:28 kelsey Exp $
+# CDMS local configuration for Michael Kelsey's personal machine
+
+G4INSTALL=/Applications/GEANT4/geant4
+ROOTSYS=/usr/local/ROOT/5.30-04
+RADSRC_HOME=/Users/kelsey/cdms/RadSrc
+RADSRC_DATA=/Users/kelsey/cdms/RadSrc/data/

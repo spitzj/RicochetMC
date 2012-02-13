@@ -1,0 +1,119 @@
+$Id: History,v 1.19 2011/07/28 05:58:49 kelsey Exp $
+-----------------------------------------------------------------
+
+                          ==================
+                          CDMS Collaboration
+                          ==================
+ 
+  History file for CDMS GEANT4 base classes cdms/cdmsim/CDMSg4base
+  ----------------------------------------------------------------
+
+ This file should be used to summarize modifications and additions 
+ made to the code and to keep track of all tags.
+
+  ---------------------------------------------------------------
+  * Please list in reverse chronological order (last date on top)
+  ---------------------------------------------------------------
+
+22 July 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-02-01)
+-----------------------------------------------------------
+- CDMSMaterialTable:  Add greenstone rock for Soudan cavern.
+
+22 July 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-02-00)
+-----------------------------------------------------------
+- CDMSMaterialTable:  New SINGLETON class (with only static interface) to
+  access all materials needed throughout CDMS simulation.  Materials must be
+  instantiated at beginning of job, before NeutronHP initializes any
+  cross-section tables.  Adding or changing materials during geometry
+  construction will cause a segfault.
+
+- CDMSVMaterials:  REMOVE this class, as it and subclasses cannot be used
+  with NeutronHP.
+
+30 June 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-01-06)
+-----------------------------------------------------------
+- CDMSVLabConstruction.hh: Add name string ctor argument for base class
+
+29 June 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-01-05)
+-----------------------------------------------------------
+- CDMSVDetectorGeometry.hh: Fix constness of constructor (name) argument
+- CDMSVSourceConstruction.hh, .cc: Fix constness of constructor (name) argument
+
+9 June 2011  Dennis Wright (SLAC) (cdms-g4base-V00-01-04)
+---------------------------------------------------------
+- CDMSVDetectorGeometry.hh: add name member and GetName() method
+- CDMSVSourceConstruction.hh, .cc: add name constructor argument
+- create class CDMSVLabConstruction
+
+25 May 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-01-03)
+----------------------------------------------------------
+- CDMS_TUIcmdWithList.icc:  Hack around compiler warnings on Linux by
+  testing for "i+1<N+1" instead of "i<N" (warns when N==0).
+
+25 May 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-01-02)
+----------------------------------------------------------
+- CDMS_TUIcmdWithList.icc:  Fix bug in GetNewListValue(); do not test for EOF
+  before accepting value and pushing onto list.
+
+24 May 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-01-01)
+----------------------------------------------------------
+- CDMSMessengerBase.hh:  Add templated function to create commands, taking only
+  command name as argument and prepending path set in ctor.
+
+- CDMSMessengerBase.icc:  New file #include'd by .hh to implement templated
+  function(s).  Only "CreateCommand<T>" currently defined.
+
+24 May 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-01-00)
+----------------------------------------------------------
+- CDMS_TUIcmdWithList:  Fix bug in ConvertToString argument not templated!
+  Add optional second template argument to support fixed number of entries.
+
+29 April 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-00-06)
+------------------------------------------------------------
+- CDMSVMaterials.cc:  Work around NeutronHP bug by instantiating NIST
+  materials in constructor, rather than on demand.
+
+26 April 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-00-05)
+------------------------------------------------------------
+- CDMSVSourceConstruction:  Add interface to set particle type for gun from
+  code (macros should use pre-defined /gun/ commands).
+
+21 April 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-00-04)
+------------------------------------------------------------
+- CDMSVDetectorGeometry:  Change list-print functions to templates, to
+  allow for "any" array of printable values (including G4ThreeVectors).
+
+5 January 2011  Michael Kelsey (SLAC) (cdms-g4base-V00-00-03)
+-------------------------------------------------------------
+- CDMSMessengerBase:  Bug fix:  Forgot to include action for verboseCmd.
+
+27 December 2010  Michael Kelsey (SLAC) (cdms-g4base-V00-00-02)
+---------------------------------------------------------------
+- CDMSMessengerBase: New class to be used as base class for all Messengers.
+  Provides safe handling of "overloaded" command paths, and commands to set
+  verbosity (and pass it through as needed by subclasses), and to print all
+  commands and current values associated with the Messenger.
+
+23 December 2010  Michael Kelsey (SLAC) (cdms-g4base-V00-00-01)
+---------------------------------------------------------------
+- CDMS_TUIcmdWithList.hh:  Forgot to #include .icc file.
+- CDMS_TUIcmdWithList.icc:  Fix initialization of defaultList from value.
+
+- CDMS_UIcmdDoublesListAndUnit:  Add local data members to handle units,
+  rather than G4UIparameter (latter fails because spaces break strings).
+  Add functionality to deal with unit conversions better (still need to
+  implement "BestUnit" handling).
+
+23 December 2010  Michael Kelsey (SLAC) (cdms-g4base-V00-00-00)
+---------------------------------------------------------------
+Copied contents of CDMSgeometry/geombase to here, along with
+CDMSsources/CDMSVSourceConstruction:
+
+	CDMSVDetectorGeometry.cc,hh
+	CDMSVMaterials.cc,hh
+	CDMSVSourceConstruction.cc,hh
+	CDMS_TUIcmdWithList.icc,hh
+	CDMS_UIcmdDoublesList.hh
+	CDMS_UIcmdDoublesListAndUnit.cc,hh
+	GNUmakefile
+	History

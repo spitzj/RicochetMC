@@ -1,0 +1,3 @@
+/control/execute CDMSgeometry/shield-draw.mac
+/geometry/test/grid_test 1
+/geometry/test/cylinder_test 1

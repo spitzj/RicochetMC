@@ -1,0 +1,40 @@
+# $Id: zip+source.mac,v 1.5 2011/02/04 16:56:36 kelsey Exp $
+#
+# Macro file to draw bare iZip (4") with housing
+#
+/control/verbose 2
+/run/verbose 2
+/CDMS/verbose 3
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+
+/CDMS/Detector zip
+/CDMS/Zip/Radius 5.0 cm
+/CDMS/Zip/Thickness 3.3 cm
+
+# Suppress side cuts for 100 mm crystal
+/CDMS/Zip/Axis1Length 0. cm
+/CDMS/Zip/Axis2Length 0. cm
+
+# Position crystal with bottom at Z=0, to match DMC coordinates
+/CDMS/Zip/Position 0. 0. 1.65 cm
+
+# Put source plate above top of ZIP crystal
+/CDMS/Source Am241
+/CDMS/Am241/Radius 5.0 cm
+/CDMS/Am241/Position 0. 0. 3.5 cm
+/CDMS/Am241/Direction 0. 0. -1.
+
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+/vis/ogl/set/printFilename zip+source
+
+/vis/viewer/set/viewpointThetaPhi 60 0		# Looking down from above
+/vis/drawVolume
+/vis/viewer/flush
+/vis/ogl/printEPS

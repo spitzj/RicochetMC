@@ -1,0 +1,4 @@
+G4INSTALL=/home/geant4/geant4.9.4.p02/src/geant4
+ROOTSYS=/usr
+G4ENV=../../../env
+G4WORKDIR=/home/bloer/geant4

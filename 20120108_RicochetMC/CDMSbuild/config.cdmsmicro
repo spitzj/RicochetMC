@@ -1,0 +1,5 @@
+# $Id: config.cdmsmicro,v 1.1 2011/10/23 20:50:23 kelsey Exp $
+# CDMS Framework configuration for Fermilab CDMSMICRO machine
+
+G4INSTALL=/usr/local/cern/geant4/geant4.9.4.p02
+ROOTSYS=/usr/local/cern/root_v5.27_source

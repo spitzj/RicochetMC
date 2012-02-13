@@ -1,0 +1,23 @@
+/.cvsignore/1.2/Thu Oct 27 19:59:26 2011//
+/CDMSsite.csh/1.2/Tue Aug 31 16:48:57 2010//
+/CDMSsite.sh/1.4/Tue Aug 31 16:48:57 2010//
+/GNUmakefile.rel/1.2/Tue Aug 31 00:07:39 2010//
+/History/1.42/Sun Nov 13 14:33:28 2011//
+/README/1.2/Thu Jul 29 19:10:42 2010//
+/arch.gmk/1.5/Tue May  3 21:20:11 2011//
+/build.gmk/1.17/Fri Nov  4 23:28:48 2011//
+/commands.gmk/1.2/Tue Aug 31 00:07:39 2010//
+/config.cdmsmicro/1.1/Sun Oct 23 20:50:23 2011//
+/config.loer-fcpa/1.1/Tue Oct 18 04:41:07 2011//
+/config.michael-kelseys-macbook/1.6/Sun Nov 13 14:33:28 2011//
+/config.slac.stanford.edu/1.8/Sat Oct 29 04:35:41 2011//
+/g4setup.csh/1.9/Sun Nov 13 14:33:28 2011//
+/g4setup.sh/1.8/Sun Nov 13 14:33:28 2011//
+/geant4.gmk/1.11/Sat Oct 22 00:11:33 2011//
+/help.gmk/1.2/Tue Aug 31 00:07:39 2010//
+/packages.gmk/1.5/Fri Nov  4 23:28:48 2011//
+/radsrc.gmk/1.1/Fri Oct  7 20:05:15 2011//
+/setup/1.5/Sun Nov 13 14:33:28 2011//
+/slac-linux/1.2/Tue May  3 21:25:50 2011//
+/targets.gmk/1.7/Fri Nov  4 23:28:48 2011//
+D

@@ -1,0 +1,34 @@
+# $Id: packages.gmk,v 1.5 2011/11/04 23:28:48 kelsey Exp $
+# Generate list of active packages and targets for them
+#
+# 20100722  Michael Kelsey
+# 20100827  Add dependence on top-level "include" for all package targets
+# 20111104  Add "|| exit" after $(MAKE) command to ensure error failure
+
+ifdef VERBOSE
+$(call info,loaded RMCbuild/packages.gmk)
+endif
+
+# Collect list of packages by looking for contained GNUmakefiles
+
+PACKAGES := $(subst /,,$(dir $(wildcard */GNUmakefile)))
+ifdef VERBOSE
+$(call info,PACKAGES=$(PACKAGES))
+endif
+
+# Define exit-on-error condition for recursive Make
+
+ifneq (,$(findstring k,$(MAKEFLAGS)))
+  EXITK := true
+else
+  EXITK := exit
+endif
+
+# Pattern-based actions for single-package targets
+
+.PHONY : $(PACKAGES)
+FORCE: ;
+$(PACKAGES:=.%) : include FORCE
+	@$(ECHO) Building $@ ...
+	pkg=$(basename $@) ; tgt=$(subst .,,$(suffix $@)) ;\
+	$(MAKE) $(MAKEVBS) -I ../RMCbuild -C $$pkg PKG=$$pkg $$tgt || $(EXITK)

@@ -1,0 +1,194 @@
+# $Id: build.gmk,v 1.17 2011/11/04 23:28:48 kelsey Exp $
+# Targets and actions necessary to build a single package
+#
+# This GNUmakefile uses and/or defines a number of variables to keep track
+# of file operations.  Users may (must) preset some of them:
+#
+# BINS		Executables to be built.  User should create dependencies
+# BINCCFILES	Source file(s) to make executables (every BIN.cc must exist)
+# SKIPFILES	Source files in package to be kept out of the library
+# RMCLIBS	Other RMC libraries required for linking ("-lA -lB" etc.)
+#
+# SUBDIRS	Multiple source/include directories within package
+#
+# PKG		Name of package being built (set in RMCbuild/packages.gmk)
+# LIBNAME	Name of library (default is package name, may be overridden)
+# LIBCCFILES	Source files to contribute to library (generated automatically)
+# LIBSUFFIX	Usually ".a", suffix for libraries to be build
+# BINSUFFIX	Usually empty, suffx for executables (".exe" for Windows)
+#
+# 20100722  Michael Kelsey
+# 20100729  If defined, use $(INCBASE) and $(LIBBASE) in compiler options
+# 20100830  Move definition of DEPFILES outside of "if clean" block
+# 20100831  Fix order of arguments to LD
+# 20100902  Remove extra period before LIBSUFFIX and BINSUFFIX
+# 20101130  Remove dependence of individual .d files on $(TMPDIR)
+# 20101202  Add creating of TMPDIR at macro level, rather than via target
+# 20110421  Remove "depend" as target of "all", to avoid errors in old packages
+# 20110503  Drop parentheses, using -C option instead
+# 20111007  Add support for external RADSRC package, used for backgrounds
+# 20111104  Add "|| exit" after $(MAKE) command to ensure error failure
+
+ifdef VERBOSE
+$(call info,loaded RMCbuild/build.gmk)
+$(call info,MAKEFLAGS = $(MAKEFLAGS))
+endif
+
+include arch.gmk
+include commands.gmk
+include geant4.gmk
+include radsrc.gmk
+
+
+# Define exit-on-error condition for recursive Make
+
+ifneq (,$(findstring k,$(MAKEFLAGS)))
+  EXITK := true
+else
+  EXITK := exit
+endif
+
+# Process subdirectories if definied in package GNUmakefile
+
+ifdef SUBDIRS
+  ifdef VERBOSE
+  $(call info,SUBDIRS=$(SUBDIRS))
+  endif
+  export PKG
+.PHONY : $(MAKECMDGOALS)
+$(MAKECMDGOALS)::
+	@for sd in $(SUBDIRS); do \
+	   $(ECHO) Building $@ in $(PKG)/$$sd ... ;\
+	   $(MAKE) $(MAKEVBS) -C $$sd -I ../../RMCbuild $@ || $(EXITK) ;\
+	 done
+endif	# SUBDIRS
+
+# Define exit-on-error condition for recursive Make
+
+ifneq (,$(findstring k,$(MAKEFLAGS)))
+  EXITK := true
+else
+  EXITK := exit
+endif
+
+# Top-level (user) targets for package; implemented below
+.PHONY : all depend lib bin clean
+
+all :: lib bin
+
+# Set flags for building this package
+CPPFLAGS += -I$(INCDIR)
+ifdef INCBASE
+CPPFLAGS += -I$(INCBASE)
+endif
+
+# Intermediate files are segregated by package
+override TMPDIR := $(TMPDIR)/$(PKG)
+ifdef VERBOSE
+$(call info,build.gmk set TMPDIR=$(TMPDIR))
+endif
+
+# Directory must exist _before_ .d files get created!
+ifeq (,$(shell ls -d $(TMPDIR) 2>/dev/null))
+$(shell $(MKDIR) -p $(TMPDIR))
+endif
+
+# Every executable must start with a self-named source file
+ifdef BINS
+BINCCFILES += $(BINS:=.cc)
+endif
+
+# Collect file list for library compilation
+LIBCCFILES := $(filter-out $(BINCCFILES) $(SKIPFILES),$(wildcard *.cc))
+
+# Dependency (.d files) -- skip these when doing CLEAN or INCLUDE
+DEPNAMES := $(strip $(LIBCCFILES:.cc=.d) $(BINCCFILES:.cc=.d))
+
+ifdef DEPNAMES
+DEPFILES := $(addprefix $(TMPDIR)/,$(DEPNAMES))
+ifdef VERBOSE
+$(call info,DEPFILES=$(DEPFILES))
+endif
+
+ifneq (clean,$(MAKECMDGOALS))
+depend :: $(TMPDIR)
+depend :: $(DEPFILES)
+
+$(TMPDIR)/%.d : %.cc
+	@[ -z "$(VERBOSE)" ] || echo "Making dependency file $@ ..."
+	$(CPP) $(CPPFLAGS) -M -MF $@ -c $(filter %.cc,$^)
+
+-include $(DEPFILES)
+endif	# NOT clean
+endif	# DEPNAMES
+
+# Library construction -- intermediate files go into tmp/... space
+
+ifdef LIBCCFILES
+ifndef LIBNAME		### Allow subdirectories to create their own libraries
+LIBNAME := $(PKG)
+endif
+LIBFILE := $(LIBDIR)/lib$(LIBNAME)$(LIBSUFFIX)
+lib :: depend $(LIBDIR)
+lib :: $(LIBFILE)
+
+ifdef VERBOSE
+$(call info,LIBCCFILES=$(LIBCCFILES))
+endif
+
+LIBOFILES := $(addprefix $(TMPDIR)/,$(LIBCCFILES:.cc=.o))
+
+$(LIBFILE) : $(LIBOFILES)
+	@$(ECHO) "Collecting .o files into $@ ..."
+	$(AR) -rc $@ $(filter %.o,$^) && $(RANLIB) $@
+endif	# LIBCCFILES
+
+# Executable linking
+
+ifdef BINS
+BINFILES  := $(addprefix $(BINDIR)/,$(addsuffix $(BINSUFFIX),$(BINS)))
+BINOFILES := $(addprefix $(TMPDIR)/,$(BINCCFILES:.cc=.o))
+
+ifdef VERBOSE
+$(call info,BINCCFILES=$(BINCCFILES))
+$(call info,BINOFILES=$(BINOFILES))
+endif
+
+bin :: depend $(BINDIR)
+bin :: $(BINFILES)
+
+.PHONY : $(BINS)		### Each executable name can be a target
+$(BINS) : depend
+$(BINS) : %:$(BINDIR)/%$(BINSUFFIX)
+
+# Include dependence on other RMC libraries as specified by user
+LDFLAGS += -L$(LIBDIR)
+DEPLIBS := $(patsubst -l%,$(LIBDIR)/lib%$(LIBSUFFIX),$(RMCLIBS))
+
+ifdef LIBBASE
+LDFLAGS  += -L$(LIBBASE)
+BASELIBS := $(patsubst -l%,$(LIBBASE)/lib%$(LIBSUFFIX),$(RMCLIBS))
+endif
+
+# NOTE:  Using $(CXX) instead of $(LD), as some options are inconsistent
+$(BINDIR)/%$(BINSUFFIX) : $(TMPDIR)/%.o $(DEPLIBS) $(BASELIBS)
+	@$(ECHO) Linking $@ ...
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(filter %.o,$^) $(RMCLIBS) \
+	  $(LDLIBS) $(LOADLIBS) -o $@
+endif	# BINS
+
+# Clean up after ourselves (double-colon required due to binmake.gmk)
+
+clean ::
+	$(RM) $(BINFILES) $(BINOFILES) $(LIBFILE) $(LIBOFILES) $(DEPFILES) 
+
+# Compilation suffix rule (.o files go into a different directory)
+
+$(TMPDIR)/%.o : %.cc
+	@$(ECHO) "Compiling $< ..."
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(filter %.cc,$^) -o $@
+
+# Create top-level directories as needed
+
+$(TMPDIR) $(LIBDIR) $(BINDIR) :
+	$(MKDIR) -p $@

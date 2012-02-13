@@ -1,0 +1,28 @@
+# $Id: bare-veto.mac,v 1.1 2011/02/11 22:14:40 kelsey Exp $
+#
+# Macro file to draw empty cryostat with veto shielding
+#
+/control/verbose 0
+/run/verbose 0
+/CDMS/verbose 0
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+/CDMS/Detector shield
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/culling global
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/zoomTo 1.5
+/vis/ogl/set/printMode pixmap
+/vis/ogl/set/printFilename veto-cutaway
+
+/vis/viewer/set/viewpointVector 0 -1 0.3
+/vis/viewer/addCutawayPlane 0 0 0 cm 0 1 0
+/vis/viewer/panTo ! 0.4 m
+/vis/drawVolume
+/vis/viewer/flush
+/vis/ogl/printEPS

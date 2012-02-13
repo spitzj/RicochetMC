@@ -1,0 +1,38 @@
+# $Id: 7tower.mac,v 1.9 2011/07/22 19:35:06 kelsey Exp $
+# Run complete cryostat with seven towers in close-packed configuration
+#
+/control/verbose 2
+/run/verbose 2
+/CDMS/verbose 0
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+/CDMS/Detector 100kg
+/CDMS/Layout/Code ring
+/CDMS/Layout/Towers 7
+
+### NOTE:  Don't have any sources which can integrate with big detectors
+/CDMS/Source beam
+
+### NOTE:  Must do this after configuration above
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+
+/vis/viewer/set/viewpointVector 0 -1 0
+/vis/viewer/addCutawayPlane 0 0 0 cm 0 1 0
+/vis/drawVolume
+
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/set/autoRefresh true
+
+# 
+# 1000 events
+#
+/run/beamOn 1000
+
+/vis/ogl/set/printFilename 9tower_1k
+/vis/ogl/printEPS

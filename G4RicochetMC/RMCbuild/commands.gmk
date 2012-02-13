@@ -1,0 +1,77 @@
+# $Id: commands.gmk,v 1.2 2010/08/31 00:07:39 kelsey Exp $
+# Define symbols for common shell commands, target actions
+#
+# 20100722  Michael Kelsey
+
+ifdef VERBOSE
+$(call info,loaded RMCbuild/commands.gmk)
+endif
+
+# ALWAYS use Bourne shell (for AIX compatibility)
+SHELL := /bin/sh
+UNAME := $(shell uname)
+
+# /bin vs. /usr/bin is different on MacOS
+
+ifeq (Darwin,$(UNAME))
+  BIN := /usr/bin
+else
+  BIN := /bin
+endif
+
+# /usr/bin vs. /usr/local/bin is different on Solaris
+
+ifeq (SunOS,$(UNAME))
+  LCL := /usr/local/bin
+else
+  LCL := /usr/bin
+endif
+
+# Symbolic names for interesting commands
+
+override AR := /usr/bin/ar
+override AWK := /usr/bin/awk
+override CAT := /usr/bin/cat
+override CD := cd
+override CHMOD := /bin/chmod
+override COMPRESS := /bin/compress -f
+override CP := /bin/cp -f
+override ECHO := /bin/echo
+override EGREP := /bin/egrep
+override FIND := /usr/bin/find
+override GREP := $(BIN)/grep
+override GS := $(LCL)/gs
+override GZIP := $(LCL)/gzip
+override GUNZIP := $(LCL)/gunzip
+override HEAD := $(BIN)/head
+override LD := /usr/bin/ld
+override LEX := /usr/bin/lex
+override LN := /bin/ln -f
+override MKDIR := /bin/mkdir
+override MOUNT := $(BIN)/mount
+override MV := /bin/mv -f
+override NICE := /usr/bin/nice
+override RANLIB := /usr/bin/ranlib
+override RM := /bin/rm -f
+override SED := $(BIN)/sed
+override TAIL := /usr/bin/tail
+override TEST := /usr/bin/test
+override TOUCH := $(BIN)/touch
+
+# TAR is special -- we want to use GNU tar always
+
+ifeq (SunOS,$(UNAME))
+  override TAR := $(LCL)/gtar
+else
+  override TAR := /usr/bin/tar
+endif
+
+# Useful target action to create symbolic links from dependences, e.g.,
+#
+# myfoo : /top/level/masterfoo
+#	@$(LINK)
+#
+# This creates ./myfoo@ -> /top/level/masterfoo
+
+# Note: "=" not ":=" here so expansion is deferred to point of use
+LINK = $(LN) -s $? $@

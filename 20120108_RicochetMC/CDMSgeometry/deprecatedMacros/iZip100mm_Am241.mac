@@ -1,0 +1,51 @@
+# $Id: iZip100mm_Am241.mac,v 1.13 2011/05/02 21:49:45 kelsey Exp $
+# Macro file to run single ZIP with radioactive source plate
+#
+# 20110427  Add flag to use hardwired gammas instead of Am-241 decay
+
+/control/verbose 0
+/run/verbose 0
+/CDMS/verbose 0
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+
+/CDMS/Detector zip
+/CDMS/Zip/Radius 5.0 cm
+/CDMS/Zip/Thickness 3.333 cm
+/CDMS/Zip/HousingSides 6
+
+# 100mm crystal has flats only along Y axis
+/CDMS/Zip/Axis1Length 10.0 cm
+/CDMS/Zip/Axis2Length 9.837 cm
+
+# Position crystal with bottom at Z=0, to match DMC coordinates
+/CDMS/Zip/Position 0. 0. 1.6665 cm
+
+# Put source plate above top of ZIP crystal
+/CDMS/Source Am241
+/CDMS/Am241/UseCDMSGammas
+/CDMS/Am241/UseZip
+/CDMS/Am241/Radius 5.0 cm
+/CDMS/Am241/Position 0. 0. 3.5 cm
+/CDMS/Am241/Direction 0. 0. -1.
+/CDMS/Am241/DrawSolid 0
+
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+
+/vis/viewer/set/viewpointThetaPhi 60 0
+/vis/drawVolume
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/set/autoRefresh true
+# 
+# 1000 events
+#
+/run/beamOn 1000
+
+/vis/ogl/set/printFilename iZip100mm_Am241
+/vis/ogl/printEPS

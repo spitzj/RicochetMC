@@ -1,0 +1,37 @@
+# $Id: bare-Am241holder.mac,v 1.4 2011/04/29 00:19:37 kelsey Exp $
+# Draw Am-241 source holder, for validation
+#
+/control/verbose 0
+/run/verbose 0
+/CDMS/verbose 2
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+/CDMS/Detector holder
+/CDMS/Zip/Radius 50.00 mm
+/CDMS/Zip/Thickness 33.33 mm
+/CDMS/Zip/Axis1Length 0 mm
+/CDMS/Zip/Axis2Length 98.37 mm
+/CDMS/Zip/HousingSides 6
+/CDMS/Am241/DrawSolid
+
+### NOTE:  Must do this after configuration above
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+/vis/ogl/set/printFilename holder
+
+/vis/viewer/set/viewpointThetaPhi 20 -90		# Tilted from face-on
+/vis/drawVolume
+/vis/viewer/flush
+/vis/ogl/printEPS
+
+/vis/viewer/addCutawayPlane 0 0 0 cm -1 1 0
+/vis/viewer/set/viewpointThetaPhi 85 -45		# Slight tilt, cutaway
+/vis/viewer/zoomTo 1.5
+/vis/drawVolume
+/vis/viewer/flush
+/vis/ogl/printEPS

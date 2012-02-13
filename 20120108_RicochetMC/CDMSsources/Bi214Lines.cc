@@ -1,0 +1,238 @@
+////////////////////////////////////////////////////////////////////////
+// $Id: Bi214Lines.cc,v 1.1 2011/07/06 21:15:29 kevmc Exp $
+//  File:        Bi214Lines.hh                                         //
+//  Description: Generate special Bi214 gammas for CDMS testing       //
+//                                                                    //
+//  Author:      Kevin McCarthy (MIT)                                 //
+//  Date:        20110706                                          //
+//                                                                    //
+//  20110706  K. McCarthy -- modeled from Am241Lines.cc               //
+//////////////////////////////////////////////////////////////////////// 
+
+#include "CDMSsources/Bi214Lines.hh"
+
+
+// Constructor fills spectrum
+
+Bi214Lines::Bi214Lines(const G4ThreeVector& dir, G4int verbose)
+  : CDMSGammaLines("Bi214Lines", dir, verbose) {
+    	AddLine(252.80*keV, 0.003);
+	AddLine(221*keV, 0.003);
+	AddLine(268.8*keV, 0.02);
+	AddLine(273.80*keV, 0.15);
+	AddLine(280.95*keV, 0.06);
+	AddLine(333.31*keV, 0.08);
+	AddLine(348.92*keV, 0.12);
+	AddLine(351.9*keV, 0.07);
+	AddLine(356.00*keV, 0.007);
+	AddLine(363.47*keV, 0.0078);
+	AddLine(375.59*keV, 0.0046);
+	AddLine(386.77*keV, 0.31);
+	AddLine(388.88*keV, 0.37);
+	AddLine(394.05*keV, 0.0148);
+	AddLine(396.01*keV, 0.029);
+	AddLine(405.74*keV, 0.17);
+	AddLine(439.34*keV, 0.012);
+	AddLine(452.92*keV, 0.031);
+	AddLine(454.77*keV, 0.30);
+	AddLine(461.0*keV, 0.053);
+	AddLine(469.76*keV, 0.129);
+	AddLine(474.41*keV, 0.110);
+	AddLine(485.92*keV, 0.022);
+	AddLine(487.95*keV, 0.028);
+	AddLine(494.2*keV, 0.012);
+	AddLine(496.90*keV, 0.0069);
+	AddLine(501.96*keV, 0.018);
+	AddLine(519.90*keV, 0.016);
+	AddLine(524.6*keV, 0.017);
+	AddLine(536.77*keV, 0.068);
+	AddLine(543.0*keV, 0.084);
+	AddLine(572.76*keV, 0.074);
+	AddLine(595.23*keV, 0.017);
+	AddLine(600.0*keV, 0.008);
+	AddLine(609.312*keV, 46.1);
+	AddLine(615.73*keV, 0.06);
+	AddLine(617.0*keV, 0.034);
+	AddLine(633.14*keV, 0.055);
+	AddLine(634.72*keV, 0.0065);
+	AddLine(639.67*keV, 0.030);
+	AddLine(649.18*keV, 0.060);
+	AddLine(658.7*keV, 0.015);
+	AddLine(661.1*keV, 0.047);
+	AddLine(665.453*keV, 1.46);
+	AddLine(677.41*keV, 0.006);
+	AddLine(683.22*keV, 0.081);
+	AddLine(687.6*keV, 0.0069);
+	AddLine(693.3*keV, 0.006);
+	AddLine(697.90*keV, 0.051);
+	AddLine(699.82*keV, 0.016);
+	AddLine(703.11*keV, 0.472);
+	AddLine(704.9*keV, 0.047);
+	AddLine(708.8*keV, 0.017);
+	AddLine(710.67*keV, 0.075);
+	AddLine(719.86*keV, 0.379);
+	AddLine(722.98*keV, 0.035);
+	AddLine(733.80*keV, 0.043);
+	AddLine(752.84*keV, 0.13);
+	AddLine(768.356*keV, 4.94);
+	AddLine(769.7*keV, 0.03);
+	AddLine(786.1*keV, 0.31);
+	AddLine(788.6*keV, 0.015);
+	AddLine(806.174*keV, 1.22);
+	AddLine(815.00*keV, 0.038);
+	AddLine(821.18*keV, 0.158);
+	AddLine(826.3*keV, 0.11);
+	AddLine(832.39*keV, 0.028);
+	AddLine(840.4*keV, 0.009);
+	AddLine(847.16*keV, 0.026);
+	AddLine(873.07*keV, 0.018);
+	AddLine(878.03*keV, 0.012);
+	AddLine(904.29*keV, 0.085);
+	AddLine(915.74*keV, 0.026);
+	AddLine(917.8*keV, 0.005);
+	AddLine(930.2*keV, 0.033);
+	AddLine(934.061*keV, 3.03);
+	AddLine(934.1*keV, 0.05);
+	AddLine(934.5*keV, 0.010);
+	AddLine(938.65*keV, 0.013);
+	AddLine(939.6*keV, 0.018);
+	AddLine(943.34*keV, 0.017);
+	AddLine(949.8*keV, 0.0055);
+	AddLine(952.2*keV, 0.0060);
+	AddLine(961.61*keV, 0.012);
+	AddLine(964.08*keV, 0.362);
+	AddLine(965.00*keV, 0.010);
+	AddLine(976.18*keV, 0.019);
+	AddLine(989.34*keV, 0.010);
+	AddLine(991.49*keV, 0.010);
+	AddLine(1013.8*keV, 0.0083);
+	AddLine(1021.0*keV, 0.014);
+	AddLine(1032.37*keV, 0.078);
+	AddLine(1033.3*keV, 0.024);
+	AddLine(1038.0*keV, 0.0083);
+	AddLine(1045.6*keV, 0.026);
+	AddLine(1051.96*keV, 0.315);
+	AddLine(1067.2*keV, 0.027);
+	AddLine(1069.96*keV, 0.275);
+	AddLine(1103.64*keV, 0.10);
+	AddLine(1104.79*keV, 0.077);
+	AddLine(1118.9*keV, 0.04);
+	AddLine(1120.287*keV, 15.1);
+	AddLine(1130.29*keV, 0.040);
+	AddLine(1133.66*keV, 0.248);
+	AddLine(1155.19*keV, 1.63);
+	AddLine(1155.6*keV, 0.016);
+	AddLine(1167.3*keV, 0.012);
+	AddLine(1172.98*keV, 0.051);
+	AddLine(1207.68*keV, 0.451);
+	AddLine(1230.6*keV, 0.015);
+	AddLine(1238.110*keV, 5.79);
+	AddLine(1279.0*keV, 0.012);
+	AddLine(1280.96*keV, 1.43);
+	AddLine(1285.1*keV, 0.017);
+	AddLine(1303.76*keV, 0.112);
+	AddLine(1316.96*keV, 0.08);
+	AddLine(1330.0*keV, 0.011);
+	AddLine(1341.49*keV, 0.022);
+	AddLine(1377.669*keV, 4.00);
+	AddLine(1385.31*keV, 0.757);
+	AddLine(1392.5*keV, 0.019);
+	AddLine(1401.50*keV, 1.27);
+	AddLine(1407.98*keV, 2.15);
+	AddLine(1419.7*keV, 0.0051);
+	AddLine(1470.9*keV, 0.0092);
+	AddLine(1479.15*keV, 0.051);
+	AddLine(1509.228*keV, 2.11);
+	AddLine(1515.5*keV, 0.0069);
+	AddLine(1538.50*keV, 0.376);
+	AddLine(1543.32*keV, 0.20);
+	AddLine(1583.22*keV, 0.690);
+	AddLine(1594.73*keV, 0.25);
+	AddLine(1598.0*keV, 0.006);
+	AddLine(1599.31*keV, 0.23);
+	AddLine(1636.3*keV, 0.012);
+	AddLine(1657.00*keV, 0.046);
+	AddLine(1661.28*keV, 1.15);
+	AddLine(1665.8*keV, 0.0083);
+	AddLine(1683.99*keV, 0.216);
+	AddLine(1711.0*keV, 0.0018);
+	AddLine(1729.595*keV, 2.92);
+	AddLine(1751.4*keV, 0.0009);
+	AddLine(1764.494*keV, 15.4);
+	AddLine(1813.73*keV, 0.011);
+	AddLine(1838.36*keV, 0.36);
+	AddLine(1847.420*keV, 2.11);
+	AddLine(1873.16*keV, 0.219);
+	AddLine(1890.30*keV, 0.08);
+	AddLine(1895.92*keV, 0.16);
+	AddLine(1898.7*keV, 0.057);
+	AddLine(1935.5*keV, 0.041);
+	AddLine(1994.6*keV, 0.005);
+	AddLine(2010.78*keV, 0.047);
+	AddLine(2021.6*keV, 0.020);
+	AddLine(2052.94*keV, 0.069);
+	AddLine(2085.1*keV, 0.0091);
+	AddLine(2089.7*keV, 0.050);
+	AddLine(2109.92*keV, 0.088);
+	AddLine(2118.55*keV, 1.14);
+	AddLine(2120.0*keV, 0.007);
+	AddLine(2147.9*keV, 0.014);
+	AddLine(2160.4*keV, 0.0018);
+	AddLine(2176.5*keV, 0.0032);
+	AddLine(2192.58*keV, 0.034);
+	AddLine(2204.21*keV, 5.08);
+	AddLine(2251.6*keV, 0.0055);
+	AddLine(2260.3*keV, 0.0087);
+	AddLine(2266.51*keV, 0.018);
+	AddLine(2270.9*keV, 0.0013);
+	AddLine(2284.3*keV, 0.0051);
+	AddLine(2287.65*keV, 0.0046);
+	AddLine(2293.40*keV, 0.305);
+	AddLine(2310.2*keV, 0.0014);
+	AddLine(2312.4*keV, 0.009);
+	AddLine(2319.3*keV, 0.0004);
+	AddLine(2325.0*keV, 0.0017);
+	AddLine(2331.3*keV, 0.0221);
+	AddLine(2348.0*keV, 0.00014);
+	AddLine(2353.5*keV, 0.0004);
+	AddLine(2361.00*keV, 0.0017);
+	AddLine(2369.0*keV, 0.0027);
+	AddLine(2376.9*keV, 0.0088);
+	AddLine(2390.8*keV, 0.0016);
+	AddLine(2405.1*keV, 0.00041);
+	AddLine(2423.27*keV, 0.0046);
+	AddLine(2444.7*keV, 0.008);
+	AddLine(2447.86*keV, 1.57);
+	AddLine(2482.8*keV, 0.0015);
+	AddLine(2505.4*keV, 0.0057);
+	AddLine(2550.7*keV, 0.00046);
+	AddLine(2562.0*keV, 0.00018);
+	AddLine(2564.0*keV, 0.00014);
+	AddLine(2604.5*keV, 0.00040);
+	AddLine(2630.9*keV, 0.0008);
+	AddLine(2662.4*keV, 0.0003);
+	AddLine(2694.7*keV, 0.031);
+	AddLine(2699.4*keV, 0.0028);
+	AddLine(2719.3*keV, 0.0018);
+	AddLine(2769.9*keV, 0.025);
+	AddLine(2785.9*keV, 0.0055);
+	AddLine(2827.0*keV, 0.0023);
+	AddLine(2861.1*keV, 0.00038);
+	AddLine(2880.3*keV, 0.0092);
+	AddLine(2893.5*keV, 0.0060);
+	AddLine(2921.9*keV, 0.014);
+	AddLine(2928.6*keV, 0.0011);
+	AddLine(2934.6*keV, 0.00046);
+	AddLine(2978.9*keV, 0.0138);
+	AddLine(3000.0*keV, 0.0088);
+	AddLine(3053.9*keV, 0.021);
+	AddLine(3081.7*keV, 0.0048);
+	AddLine(3094.0*keV, 0.00044);
+	AddLine(3142.6*keV, 0.0012);
+	AddLine(3160.6*keV, 0.00032);
+	AddLine(3183.6*keV, 0.00129);
+
+  NormalizeLines();
+}
+
+Bi214Lines::~Bi214Lines() {}

@@ -1,0 +1,26 @@
+# $Id: cryostat.mac,v 1.8 2011/01/21 18:31:50 kelsey Exp $
+# Draw empty CDMS cryostat with default geometry, for validation
+#
+/control/verbose 2
+/run/verbose 2
+/CDMS/verbose 0
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+/CDMS/Detector cryo
+
+### NOTE:  Must do this after configuration above
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+/vis/viewer/zoomTo 1.5
+/vis/ogl/set/printFilename cryostat
+
+/vis/viewer/set/viewpointVector 0 -1 0
+/vis/viewer/addCutawayPlane 0 0 0 cm 0 1 0
+/vis/drawVolume
+/vis/viewer/flush
+/vis/ogl/printEPS

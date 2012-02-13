@@ -1,0 +1,24 @@
+# $Id: bare-support.mac,v 1.7 2011/01/21 18:31:50 kelsey Exp $
+# Draw single CDMS tower support with default geometry, for validation
+#
+/control/verbose 2
+/run/verbose 2
+/CDMS/verbose 3
+
+# Configure detector (also defines subsequent commands)
+/CDMS/Lab NoLab
+/CDMS/Detector support
+
+### NOTE:  Must do this after configuration above
+/CDMS/updateGeom
+
+/vis/open OGLIX 600x600-0+0
+/vis/verbose errors
+/vis/viewer/set/autoRefresh false
+/vis/viewer/set/upVector 0 0 1
+/vis/ogl/set/printFilename tower_support
+
+/vis/viewer/set/viewpointThetaPhi 85 0
+/vis/drawVolume
+/vis/viewer/flush
+/vis/ogl/printEPS

@@ -1,0 +1,66 @@
+//
+////////////////////////////////////////////////////////////////////////
+//                                                                    //
+//  File:        MITReactorMessenger.cc                               //
+//                                                                    //
+//  Description: Messenger class to allow setting MITReactor geometry //
+//               parameters                                           //
+//                                                                    //
+//  Author:      Adam Anderson (MIT)                                  //
+//  Date:        28 September 2011                                    //
+//                                                                    //
+////////////////////////////////////////////////////////////////////////
+
+#include "MITReactorMessenger.hh"
+
+#include "MITReactor.hh"
+#include "G4UIdirectory.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
+
+
+MITReactorMessenger::MITReactorMessenger(MITReactor* theSetup)
+ :labSetup(theSetup)
+{ 
+  labDir = new G4UIdirectory("/CDMS/MITReactorGeom/");
+  labDir->SetGuidance("UI commands to configure MITReactor geometry");
+
+  OverBurdenCmd = new G4UIcmdWithADoubleAndUnit("/CDMS/MITReactorGeom/setOverBurden", this);
+  OverBurdenCmd->SetGuidance("Set thickness of rock above cavern");
+  OverBurdenCmd->SetParameterName("Size", false);
+  OverBurdenCmd->SetRange("Size>=0.");
+  OverBurdenCmd->SetUnitCategory("Length");
+  OverBurdenCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+  MinWallThicknessCmd = new G4UIcmdWithADoubleAndUnit("/CDMS/MITReactorGeom/setWallThickness", this);
+  MinWallThicknessCmd->SetGuidance("Set minimum thickness of rock wall around cavern");
+  MinWallThicknessCmd->SetParameterName("Size", false);
+  MinWallThicknessCmd->SetRange("Size>=0.");
+  MinWallThicknessCmd->SetUnitCategory("Length");
+  MinWallThicknessCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+  CavernLengthCmd = new G4UIcmdWithADoubleAndUnit("/CDMS/MITReactorGeom/setCavernLength", this);
+  CavernLengthCmd->SetGuidance("Set length of cavern");
+  CavernLengthCmd->SetParameterName("Size", false);
+  CavernLengthCmd->SetRange("Size>=0.");
+  CavernLengthCmd->SetUnitCategory("Length");
+  CavernLengthCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+}
+
+
+MITReactorMessenger::~MITReactorMessenger()
+{
+  delete OverBurdenCmd;
+  delete MinWallThicknessCmd;
+  delete CavernLengthCmd;
+  delete labDir;
+}
+
+
+void MITReactorMessenger::SetNewValue(G4UIcommand* command, G4String value)
+{ 
+  if (command == OverBurdenCmd) labSetup->SetOverBurden(OverBurdenCmd->GetNewDoubleValue(value));
+
+  if (command == MinWallThicknessCmd) labSetup->SetMinWallThickness(MinWallThicknessCmd->GetNewDoubleValue(value));
+
+  if (command == CavernLengthCmd) labSetup->SetCavernLength(CavernLengthCmd->GetNewDoubleValue(value));
+}
